@@ -1,17 +1,23 @@
 /**
  * This project supports a Google spreadsheet that simulates an API. The spreadsheet contains
- * multiple sheets that feed information to separate projects. The spredsheet is meant
+ * multiple sheets that feed information to separate projects. The spreadsheet is meant
  * to make data gathering more time efficient. Three of the sheets have to be manually
- * updated, but another three can be automated using report subscriptions from Cognos.
- * The three subscribed reports are sent to Alvaro Gomez's gmail and are labeled.
+ * updated (Alt_HS_Attendance_Enrollment_Count, Entry_Withdrawal, and Allergies) on this
+ * project's spreadsheet, but another three (Schedules, ContactInfo, and Entry_Withdrawal2)
+ * are automatically updated using report subscriptions from Cognos and triggers that call
+ * updateSheetsFromEmail(). The three subscribed Cognos reports are sent to Alvaro Gomez's gmail
+ * from Cognos programatically and are automatically labeled using Gmail's labeling rules
+ * service.
  * 
- * The function below updates the sheets using the data from attached Excel files.
+ * The function below updates the sheets using the data from the emails' attached Excel files.
  * The emails are identified using specific Gmail labels. Each label corresponds
  * to a specific sheet within the target spreadsheet.
  * 
- * This script uses the Google Drive API service to proocess the Excel file attachments.
- * A time-based trigger is configured to run this function every weekday at 5:00 AM
- * after the emails have been received from Cognos from 4:00 - 4:03 AM each weekday.
+ * This script uses the Google Drive API service to process the Excel file attachments.
+ * 
+ * Five (one for each day of the week) time-based triggers are configured to run this function
+ * every weekday at 5:00 AM after the emails have been received from Cognos which are scheduled
+ * between 4:00 - 4:03 AM each weekday.
  * 
  * Author: Alvaro Gomez, Academic Technology Coach
  * Office Phone: 1-210-397-9408
@@ -57,7 +63,9 @@ function updateSheetsFromEmail() {
 }
 
 /**
- * Processes the most recent email with the given Gmail label and updates the target sheet.
+ * This function is called by updateSheetsFromEmail, it processes the most recent
+ * email with the configured Gmail label and updates the target sheet's data range with
+ * the data provided in the sheet.
  *
  * @param {string} labelName - The Gmail label to search for.
  * @param {string} spreadsheetId - The ID of the target Google Spreadsheet.
@@ -114,8 +122,8 @@ function processEmailToSheet(labelName, spreadsheetId, sheetName, rangeToClear) 
 }
 
 /**
- * Processes an Excel file attachment and extracts its data as a 2D array.
- * The first row (header) is excluded from the returned data.
+ * Is called by processEmailToSheet and processes an Excel file attachment which extracts
+ * its data as a 2D array. The first row (header) is excluded from the returned data.
  *
  * @param {Blob} fileBlob - The Excel file attachment as a Blob object.
  * @returns {Array<Array<string>>} The extracted data from the Excel file, excluding the header row.
