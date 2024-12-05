@@ -1,6 +1,6 @@
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
-  ui.createMenu('🚩Criteria Sheets')
+  ui.createMenu('🚩 Push Data')
     .addItem('Push Data to Sheets', 'pushDataToSheets')
     .addToUi();
 }
@@ -43,8 +43,8 @@ function pushDataToSheets() {
       sourceData["Allergies"]
     );
 
-    // Inform the user that the operation completed successfully
-    SpreadsheetApp.getUi().alert("Data has been successfully pushed to the target sheets!");
+    // Show custom dialog box with success message and links
+    showSuccessDialog();
 
   } catch (error) {
     console.error("An error occurred in pushDataToSheets:", error.message, error.stack);
@@ -52,6 +52,28 @@ function pushDataToSheets() {
     SpreadsheetApp.getUi().alert(`An error occurred: ${error.message}`);
   }
 }
+
+/**
+ * Shows a custom success dialog with hyperlinks.
+ */
+function showSuccessDialog() {
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; font-size: 14px;">
+      <p>Data was pushed successfully to the criteria sheets.</p>
+      <ul>
+        <li><a href="https://docs.google.com/spreadsheets/d/1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA/edit?gid=524766497#gid=524766497" target="_blank">NAHS Criteria Sheet</a></li>
+        <li><a href="https://docs.google.com/spreadsheets/d/1O3DSgTbhphNVDXLmlGkEiyVejsL_l4fPsf2cJJpQpTo/edit?gid=93840204#gid=93840204" target="_blank">NAMS 2024-25 Criteria Sheet</a></li>
+      </ul>
+    </div>
+  `;
+  
+  const htmlOutput = HtmlService.createHtmlOutput(htmlContent)
+    .setWidth(400)
+    .setHeight(200);
+  
+  SpreadsheetApp.getUi().showModalDialog(htmlOutput, "Data Push");
+}
+
 
 /**
  * Updates the target sheet with new data, clearing old data and appending a timestamp note in cell A1.
