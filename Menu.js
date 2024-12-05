@@ -63,6 +63,7 @@ function showSuccessDialog() {
       <ul>
         <li><a href="https://docs.google.com/spreadsheets/d/1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA/edit?gid=524766497#gid=524766497" target="_blank">NAHS Criteria Sheet</a></li>
         <li><a href="https://docs.google.com/spreadsheets/d/1O3DSgTbhphNVDXLmlGkEiyVejsL_l4fPsf2cJJpQpTo/edit?gid=93840204#gid=93840204" target="_blank">NAMS 2024-25 Criteria Sheet</a></li>
+        <li><a href="https://docs.google.com/spreadsheets/d/14-nvlNOLWebnJJOQNZPnglWx0OuE5U-_xEbXGodND6E/edit?gid=1422083122#gid=1422083122" target="_blank">NAHS 24-25 Student Transition Notes</a></li>
       </ul>
     </div>
   `;
