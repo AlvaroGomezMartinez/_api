@@ -141,7 +141,26 @@ function processExcelData(fileBlob) {
 
   // Use the Advanced Drive Service to insert the file
   const sheetFile = Drive.Files.create(resource, file.getBlob());
-  const spreadsheet = SpreadsheetApp.openById(sheetFile.id);
+  const spreadsheetId = sheetFile.id;
+
+  // Add a retry mechanism to handle backend propagation delay
+  const maxRetries = 5;
+  const retryDelay = 1000; // 1 second
+  let retryCount = 0;
+  let spreadsheet;
+
+  while (retryCount < maxRetries) {
+    try {
+      spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+      break; // Exit loop if successful
+    } catch (e) {
+      retryCount++;
+      if (retryCount >= maxRetries) {
+        throw new Error(`Failed to open the Google Sheet after ${maxRetries} retries. Error: ${e.message}`);
+      }
+      Utilities.sleep(retryDelay); // Wait before retrying
+    }
+  }
 
   // Open the first sheet and get its data as a 2D array
   const sheet = spreadsheet.getSheets()[0];
@@ -151,8 +170,15 @@ function processExcelData(fileBlob) {
   const dataWithoutHeader = data.slice(1);
 
   // Delete the temporary files from Google Drive
-  file.setTrashed(true);
-  Drive.Files.remove(sheetFile.id); // Advanced Service can delete directly
+  try {
+    Utilities.sleep(2000); // Wait 2 seconds before deletion
+    file.setTrashed(true); // Move the original file to trash
+    Drive.Files.remove(spreadsheetId); // Attempt to delete the converted file
+    Logger.log(`File cleanup completed successfully.`);
+  } catch (error) {
+    Logger.log(`Error during file cleanup: ${error.message}`);
+    // Optionally notify or log the error without breaking the script flow
+  }
 
   return dataWithoutHeader; // Return the extracted data
 }
