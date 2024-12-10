@@ -1,5 +1,6 @@
 /**
- * This is a utility formula used to get the list of Gmail labels.
+ * This is a utility formula that was used to get the list of Gmail labels.
+ * It was only run to get the label names for the main function.
 */
 function listGmailLabels() {
   const labels = GmailApp.getUserLabels();
