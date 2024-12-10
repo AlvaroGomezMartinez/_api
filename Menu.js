@@ -59,7 +59,7 @@ function pushDataToSheets() {
 function showSuccessDialog() {
   const htmlContent = `
     <div style="font-family: Arial, sans-serif; font-size: 14px;">
-      <p>Data was pushed successfully to the criteria sheets.</p>
+      <p>Data was pushed successfully to the reports.</p>
       <ul>
         <li><a href="https://docs.google.com/spreadsheets/d/1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA/edit?gid=524766497#gid=524766497" target="_blank">NAHS Criteria Sheet</a></li>
         <li><a href="https://docs.google.com/spreadsheets/d/1O3DSgTbhphNVDXLmlGkEiyVejsL_l4fPsf2cJJpQpTo/edit?gid=93840204#gid=93840204" target="_blank">NAMS 2024-25 Criteria Sheet</a></li>
