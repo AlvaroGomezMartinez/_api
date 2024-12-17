@@ -3,7 +3,8 @@
  * multiple sheets that feed information to separate projects. The spreadsheet is meant
  * to make data gathering more time efficient. Three of the sheets have to be manually
  * updated (Alt_HS_Attendance_Enrollment_Count, Entry_Withdrawal, and Allergies) on this
- * project's spreadsheet, but another three (Schedules, ContactInfo, and Entry_Withdrawal2)
+ * project's spreadsheet because they do not have report subscription options in Cognos, but 
+ * another three (Schedules, ContactInfo, and Entry_Withdrawal2)
  * are automatically updated using report subscriptions from Cognos and triggers that call
  * updateSheetsFromEmail(). The three subscribed Cognos reports are sent to Alvaro Gomez's gmail
  * from Cognos programatically and are automatically labeled using Gmail's labeling rules
@@ -173,7 +174,6 @@ function processExcelData(fileBlob) {
   try {
     Utilities.sleep(2000); // Wait 2 seconds before deletion
     file.setTrashed(true); // Move the original file to trash
-    Drive.Files.remove(spreadsheetId); // Attempt to delete the converted file
     Logger.log(`File cleanup completed successfully.`);
   } catch (error) {
     Logger.log(`Error during file cleanup: ${error.message}`);
