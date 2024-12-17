@@ -1,0 +1,11 @@
+# Ignore Git folder
+.git/
+
+# Ignore clasp project config file
+.clasp.json
+
+# Ignore markdown files like README
+*.md
+
+# Ignore MacOS system files
+.DS_Store
