@@ -62,11 +62,11 @@ var CONFIG = {
       label:
         "Campuses/NAHS/Transition Information Workflow Project/Transition Information Workflow Project Contact Information",
       sheetName: "ContactInfo",
-      rangeToClear: "A2:J", // @todo Update to use new column organization from the report. Go to the email and check the new column orders.
+      rangeToClear: "A2:J",
     },
     {
       label:
-        "Campuses/NAHS/Transition Information Workflow Project/Transition Informatin Workflow Entry_Withdrawal",
+        "Campuses/NAHS/Transition Information Workflow Project/Transition Information Workflow Project Entry/Withdrawal",
       sheetName: "Entry_Withdrawal2",
       rangeToClear: "A2:O",
     },
