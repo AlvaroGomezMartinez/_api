@@ -1,0 +1,5 @@
+# Google Apps Script files
+.clasp.json
+.claspignore
+appsscript.json
+.DS_Store
