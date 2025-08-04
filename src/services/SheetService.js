@@ -1,20 +1,32 @@
 /**
- * Google Sheets service for handling spreadsheet operations in the NISD API project.
+ * @fileoverview Google Sheets Service for NISD API Project
+ * @description Google Sheets service for handling spreadsheet operations in the NISD API project.
  * Provides methods for reading, writing, and managing spreadsheet data.
  * Compatible with Google Apps Script V8 runtime.
- * 
  * @author Alvaro Gomez, Academic Technology Coach
+ * @version 2.0.0
+ * @since 2025-08-04
  */
 
 /**
- * Updates a specific sheet with new data
+ * @function SheetService_updateSheet
+ * @description Updates a specific sheet with new data
  * @param {string} spreadsheetId - The ID of the target spreadsheet
  * @param {string} sheetName - The name of the sheet to update
  * @param {string} rangeToClear - The range to clear before inserting new data
  * @param {Array<Array<any>>} data - The data to insert
- * @param {string} context - Context for error messages
+ * @param {string} [context] - Context for error messages
  * @returns {Object} Operation result with metadata
  * @throws {Error} If the operation fails
+ * @example
+ * var data = [['Name', 'Age'], ['John', 25], ['Jane', 30]];
+ * var result = SheetService_updateSheet(
+ *   '1ABC...XYZ',
+ *   'Students',
+ *   'A2:Z',
+ *   data,
+ *   'Student data update'
+ * );
  */
 function SheetService_updateSheet(spreadsheetId, sheetName, rangeToClear, data, context) {
   context = context || 'Sheet update';
@@ -370,8 +382,7 @@ function SheetService_getSpreadsheetMetadata(spreadsheetId) {
       name: spreadsheet.getName(),
       url: spreadsheet.getUrl(),
       sheetCount: sheets.length,
-      sheetNames: sheets.map(function(sheet) { return sheet.getName(); }),
-      lastUpdated: spreadsheet.getLastUpdated()
+      sheetNames: sheets.map(function(sheet) { return sheet.getName(); })
     };
   } catch (error) {
     throw ErrorHandler_createError(

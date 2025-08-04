@@ -1,33 +1,69 @@
 /**
- * NISD API Project - Refactored Main Entry Points
- * 
- * This project supports a Google spreadsheet that simulates an API. The spreadsheet contains
- * multiple sheets that feed information to separate projects. The spreadsheet is meant
- * to make data gathering more time efficient. Three of the sheets have to be manually
- * updated (Alt_HS_Attendance_Enrollment_Count, Entry_Withdrawal, and Allergies) on this
- * project's spreadsheet because they do not have report subscription options in Cognos, but 
- * another three (Schedules, ContactInfo, and Entry_Withdrawal2)
- * are automatically updated using report subscriptions from Cognos and triggers that call
- * updateSheetsFromEmail(). The three subscribed Cognos reports are sent to Alvaro Gomez's gmail
- * from Cognos programatically and are automatically labeled using Gmail's labeling rules
- * service.
- * 
- * This script has been refactored to use a modular architecture with proper error handling,
- * logging, and configuration management.
- * 
- * Five (one for each day of the week) time-based triggers are configured to run this function
- * every weekday at 5:00 AM after the emails have been received from Cognos which are scheduled
- * between 4:00 - 4:03 AM each weekday.
- * 
- * Author: Alvaro Gomez, Academic Technology Coach
- * Office Phone: 1-210-397-9408
- * Cell Phone: 1-210-363-1577
+ * @fileoverview NISD API Project - Main Entry Points
+ * @description Core functions for automated data processing and spreadsheet management
+ * @author Alvaro Gomez, Academic Technology Coach
+ * @contact alvaro.gomez@nisd.net
+ * @version 2.0.0
+ * @since 2025-08-04
  */
 
 /**
- * Main function for automated email processing (called by triggers)
- * Updates sheets using data from emails' attached Excel files
- * @returns {Array<Object>} Processing results for each configuration
+ * @overview NISD API Project
+ * 
+ * This project supports a Google spreadsheet that simulates an API. The spreadsheet contains
+ * multiple sheets that feed information to separate projects. The spreadsheet is designed
+ * to make data gathering more time efficient.
+ * 
+ * ## Data Sources
+ * **Manual Updates Required:**
+ * - Alt_HS_Attendance_Enrollment_Count
+ * - Entry_Withdrawal  
+ * - Allergies
+ * (These sheets lack report subscription options in Cognos)
+ * 
+ * **Automated Updates:**
+ * - Schedules
+ * - ContactInfo
+ * - Entry_Withdrawal2
+ * (Updated via Cognos report subscriptions and email triggers)
+ * 
+ * ## Architecture
+ * This script uses a modular architecture with:
+ * - Proper error handling and logging
+ * - Configuration management
+ * - Service layer abstractions
+ * - Comprehensive validation
+ * 
+ * ## Automation Schedule
+ * Time-based triggers run every weekday at 5:00 AM (one for each day of the week)
+ * after Cognos emails are received (scheduled between 4:00 - 4:03 AM).
+ * Emails are automatically labeled using Gmail's labeling rules service.
+ * 
+ * @author Alvaro Gomez, Academic Technology Coach
+ * @contact Office: 1-210-397-9408 | Cell: 1-210-363-1577
+ */
+
+/**
+ * @function updateSheetsFromEmail
+ * @description Main function for automated email processing (called by triggers)
+ * 
+ * This function processes all configured email labels, extracts data from Excel
+ * attachments, and updates corresponding spreadsheet sheets. It's designed to be
+ * called by time-based triggers for automated daily updates.
+ * 
+ * @returns {Array<Object>} Processing results for each email configuration
+ * @returns {Array<Object>} results[].success - Whether the operation succeeded
+ * @returns {Array<Object>} results[].sheetName - Name of the processed sheet
+ * @returns {Array<Object>} results[].dataCount - Number of rows processed
+ * @returns {Array<Object>} results[].error - Error message if operation failed
+ * 
+ * @example
+ * // Called automatically by triggers, but can be run manually
+ * var results = updateSheetsFromEmail();
+ * console.log('Processed ' + results.length + ' configurations');
+ * 
+ * @since 1.0.0
+ * @throws {Error} If email processing fails critically
  */
 function updateSheetsFromEmail() {
   var timer = AppLogger_startTimer('updateSheetsFromEmail');

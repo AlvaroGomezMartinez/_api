@@ -1,13 +1,23 @@
 /**
- * Menu and UI functions for the NISD API project.
- * Provides spreadsheet menu items and dialog functionality.
- * Refactored to use the new modular architecture.
- * 
+ * @fileoverview Menu and UI functions for the NISD API project
+ * @description Provides Google Sheets menu integration and user interface functions
  * @author Alvaro Gomez, Academic Technology Coach
+ * @version 2.0.0
+ * @since 2025-08-04
  */
 
 /**
- * Creates the custom menu when the spreadsheet is opened
+ * @function onOpen
+ * @description Creates the custom menu when the spreadsheet is opened
+ * 
+ * This function is automatically called by Google Sheets when the spreadsheet
+ * is opened. It creates a custom menu with data processing and testing options.
+ * 
+ * @memberof Google.Apps.Script.Events
+ * @example
+ * // Automatically called by Google Sheets, no manual invocation needed
+ * 
+ * @since 1.0.0
  */
 function onOpen() {
   var ui = SpreadsheetApp.getUi();
@@ -22,10 +32,24 @@ function onOpen() {
 }
 
 /**
- * Gets called when the user selects the 'Push Data to Sheets' item in the menu.
- * Pushes data from the current spreadsheet to specific sheets in two target spreadsheets
- * (NAHS Criteria Sheet and NAMS 2024-25 Criteria Sheet).
- * Now uses the refactored DataPusher class.
+ * @function pushDataToSheets
+ * @description Pushes data from source sheets to target spreadsheets
+ * 
+ * This function is called when the user selects 'Push Data to Sheets' from the menu.
+ * It reads data from configured source sheets in the current spreadsheet and pushes
+ * them to specific target sheets in external spreadsheets (NAHS Criteria Sheet and 
+ * NAMS 2024-25 Criteria Sheet).
+ * 
+ * @returns {void} Shows success dialog with links or error alert
+ * 
+ * @example
+ * // Called via menu item, processes all configured source sheets:
+ * // - Alt_HS_Attendance_Enrollment_Count → NAHS Criteria
+ * // - Entry_Withdrawal → NAHS Criteria  
+ * // - Allergies → NAMS Criteria
+ * 
+ * @since 1.0.0
+ * @see {@link DataPusher_pushAllData} for the underlying implementation
  */
 function pushDataToSheets() {
   var timer = AppLogger_startTimer('pushDataToSheets_menu');

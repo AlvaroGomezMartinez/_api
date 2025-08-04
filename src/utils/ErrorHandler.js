@@ -1,17 +1,29 @@
 /**
- * Centralized error handling utility for the NISD API project.
+ * @fileoverview Error Handler Utility for NISD API Project
+ * @description Centralized error handling utility for the NISD API project.
  * Provides consistent error handling, logging, and retry mechanisms.
  * Compatible with Google Apps Script V8 runtime.
- * 
  * @author Alvaro Gomez, Academic Technology Coach
+ * @version 2.0.0
+ * @since 2025-08-04
  */
 
 /**
- * Handles errors with consistent logging and formatting
+ * @function ErrorHandler_handle
+ * @description Handles errors with consistent logging and formatting
  * @param {Error} error - The error object to handle
- * @param {string} context - Context information about where the error occurred
- * @param {Object} additionalInfo - Additional information to log
+ * @param {string} [context] - Context information about where the error occurred
+ * @param {Object} [additionalInfo] - Additional information to log
  * @returns {string} Formatted error message
+ * @example
+ * try {
+ *   // some operation
+ * } catch (error) {
+ *   var message = ErrorHandler_handle(error, 'Data processing', { 
+ *     operation: 'updateSheet',
+ *     sheetName: 'TestSheet' 
+ *   });
+ * }
  */
 function ErrorHandler_handle(error, context, additionalInfo) {
   context = context || '';

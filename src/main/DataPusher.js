@@ -1,15 +1,22 @@
 /**
- * Data pusher for the NISD API project.
+ * @fileoverview Data Pusher for NISD API Project
+ * @description Data pusher for the NISD API project.
  * Handles manual data push operations from the main spreadsheet to target spreadsheets.
  * Compatible with Google Apps Script V8 runtime.
- * 
  * @author Alvaro Gomez, Academic Technology Coach
+ * @version 2.0.0
+ * @since 2025-08-04
  */
 
 /**
- * Pushes data from source sheets to all configured target spreadsheets
- * This is the main entry point for manual data push operations
+ * @function DataPusher_pushAllData
+ * @description Pushes data from source sheets to all configured target spreadsheets.
+ * This is the main entry point for manual data push operations.
  * @returns {Array<Object>} Array of push results for each source sheet
+ * @example
+ * var results = DataPusher_pushAllData();
+ * var successful = results.filter(function(r) { return r.success; }).length;
+ * console.log('Successfully pushed ' + successful + ' out of ' + results.length + ' sheets');
  */
 function DataPusher_pushAllData() {
   var timer = AppLogger_startTimer('pushAllData');

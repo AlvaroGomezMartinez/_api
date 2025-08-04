@@ -1,15 +1,28 @@
 /**
- * Email processor for the NISD API project.
+ * @fileoverview Email Processor for NISD API Project
+ * @description Email processor for the NISD API project.
  * Handles automated data processing from Gmail attachments to Google Sheets.
  * Compatible with Google Apps Script V8 runtime.
- * 
  * @author Alvaro Gomez, Academic Technology Coach
+ * @version 2.0.0
+ * @since 2025-08-04
  */
 
 /**
- * Processes all configured email labels and updates corresponding sheets
- * This is the main entry point for automated email processing
+ * @function EmailProcessor_processAllConfigs
+ * @description Processes all configured email labels and updates corresponding sheets.
+ * This is the main entry point for automated email processing.
+ * @param {boolean} [dryRun=false] - If true, performs validation without making changes
  * @returns {Array<Object>} Array of processing results for each configuration
+ * @example
+ * // Normal processing
+ * var results = EmailProcessor_processAllConfigs();
+ * results.forEach(function(result) {
+ *   console.log(result.sheetName + ': ' + (result.success ? 'SUCCESS' : 'FAILED'));
+ * });
+ * 
+ * // Dry run for testing
+ * var testResults = EmailProcessor_processAllConfigs(true);
  */
 function EmailProcessor_processAllConfigs() {
   var timer = AppLogger_startTimer('processAllConfigs');

@@ -1,15 +1,21 @@
 /**
- * Structured logging utility for the NISD API project.
+ * @fileoverview Logger Utility for NISD API Project
+ * @description Structured logging utility for the NISD API project.
  * Provides consistent logging with different levels and structured output.
  * Compatible with Google Apps Script V8 runtime.
- * 
  * @author Alvaro Gomez, Academic Technology Coach
+ * @version 2.0.0
+ * @since 2025-08-04
  */
 
 /**
- * Logs an info message
+ * @function AppLogger_info
+ * @description Logs an info message
  * @param {string} message - The message to log
- * @param {Object} context - Additional context information
+ * @param {Object} [context] - Additional context information
+ * @example
+ * AppLogger_info('Operation completed successfully');
+ * AppLogger_info('Data processed', { rowCount: 150, duration: 1200 });
  */
 function AppLogger_info(message, context) {
   context = context || {};
@@ -17,9 +23,12 @@ function AppLogger_info(message, context) {
 }
 
 /**
- * Logs a warning message
+ * @function AppLogger_warn
+ * @description Logs a warning message
  * @param {string} message - The message to log
- * @param {Object} context - Additional context information
+ * @param {Object} [context] - Additional context information
+ * @example
+ * AppLogger_warn('Missing optional parameter', { parameter: 'context' });
  */
 function AppLogger_warn(message, context) {
   context = context || {};
@@ -27,10 +36,17 @@ function AppLogger_warn(message, context) {
 }
 
 /**
- * Logs an error message
+ * @function AppLogger_error
+ * @description Logs an error message
  * @param {string} message - The message to log
- * @param {Error|Object} error - Error object or additional context
- * @param {Object} context - Additional context information
+ * @param {Error|Object} [error] - Error object or additional context
+ * @param {Object} [context] - Additional context information
+ * @example
+ * try {
+ *   // some operation
+ * } catch (error) {
+ *   AppLogger_error('Operation failed', error, { operation: 'dataProcessing' });
+ * }
  */
 function AppLogger_error(message, error, context) {
   error = error || null;

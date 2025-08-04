@@ -1,16 +1,23 @@
 /**
- * Email service for handling Gmail operations in the NISD API project.
+ * @fileoverview Email Service for NISD API Project
+ * @description Email service for handling Gmail operations in the NISD API project.
  * Provides methods for retrieving emails, attachments, and managing Gmail labels.
  * Compatible with Google Apps Script V8 runtime.
- * 
  * @author Alvaro Gomez, Academic Technology Coach
+ * @version 2.0.0
+ * @since 2025-08-04
  */
 
 /**
- * Retrieves the latest email from a specific Gmail label
+ * @function EmailService_getLatestEmailByLabel
+ * @description Retrieves the latest email from a specific Gmail label
  * @param {string} labelName - The Gmail label to search for
  * @returns {GoogleAppsScript.Gmail.GmailMessage} The latest email message
  * @throws {Error} If the label doesn't exist or no emails are found
+ * @example
+ * // Get latest email from a specific label
+ * var email = EmailService_getLatestEmailByLabel('Reports/Daily');
+ * console.log('Email subject: ' + email.getSubject());
  */
 function EmailService_getLatestEmailByLabel(labelName) {
   var timer = AppLogger_startTimer('getLatestEmailByLabel_' + labelName);
@@ -58,11 +65,15 @@ function EmailService_getLatestEmailByLabel(labelName) {
 }
 
 /**
- * Extracts an Excel attachment from an email message
+ * @function EmailService_getExcelAttachment
+ * @description Extracts an Excel attachment from an email message
  * @param {GoogleAppsScript.Gmail.GmailMessage} message - The email message
- * @param {string} context - Context for error messages
+ * @param {string} [context] - Context for error messages
  * @returns {GoogleAppsScript.Base.Blob} The Excel attachment as a Blob
  * @throws {Error} If no Excel attachment is found
+ * @example
+ * var email = EmailService_getLatestEmailByLabel('Reports/Daily');
+ * var attachment = EmailService_getExcelAttachment(email, 'Daily report processing');
  */
 function EmailService_getExcelAttachment(message, context) {
   context = context || 'Email attachment extraction';
