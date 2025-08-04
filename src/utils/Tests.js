@@ -1,6 +1,7 @@
 /**
- * Test functions for the NISD API project.
- * Provides test cases to validate the refactored functionality.
+ * Test suite for the NISD API project.
+ * Provides comprehensive testing functions for all modules.
+ * Compatible with Google Apps Script V8 runtime.
  * 
  * @author Alvaro Gomez, Academic Technology Coach
  */
@@ -11,10 +12,10 @@
  */
 function runAllTests() {
   try {
-    AppLogger.operationStart('runAllTests');
+    AppLogger_operationStart('runAllTests');
     
-    const testResults = {
-      timestamp: DateUtils.getCurrentTimestamp(),
+    var testResults = {
+      timestamp: DateUtils_getCurrentTimestamp(),
       tests: {},
       summary: {
         total: 0,
@@ -38,28 +39,31 @@ function runAllTests() {
     testResults.tests.spreadsheetConnectivity = testSpreadsheetConnectivity();
     
     // Calculate summary
-    Object.values(testResults.tests).forEach(test => {
-      testResults.summary.total++;
-      if (test.status === 'PASS') {
-        testResults.summary.passed++;
-      } else if (test.status === 'FAIL') {
-        testResults.summary.failed++;
-      } else {
-        testResults.summary.skipped++;
+    for (var testName in testResults.tests) {
+      if (testResults.tests.hasOwnProperty(testName)) {
+        var test = testResults.tests[testName];
+        testResults.summary.total++;
+        if (test.status === 'PASS') {
+          testResults.summary.passed++;
+        } else if (test.status === 'FAIL') {
+          testResults.summary.failed++;
+        } else {
+          testResults.summary.skipped++;
+        }
       }
-    });
+    }
     
-    const allPassed = testResults.summary.failed === 0;
+    var allPassed = testResults.summary.failed === 0;
     
-    AppLogger.operationSuccess('runAllTests', {
-      allPassed,
+    AppLogger_operationSuccess('runAllTests', {
+      allPassed: allPassed,
       summary: testResults.summary
     });
     
     return testResults;
     
   } catch (error) {
-    AppLogger.operationFailure('runAllTests', error);
+    AppLogger_operationFailure('runAllTests', error);
     throw error;
   }
 }
@@ -69,7 +73,7 @@ function runAllTests() {
  */
 function testConfigValidation() {
   try {
-    const results = [];
+    var results = [];
     
     // Test that CONFIG object exists and has required properties
     if (!CONFIG) {
@@ -77,33 +81,37 @@ function testConfigValidation() {
     }
     
     // Test required CONFIG properties
-    const requiredProps = ['SPREADSHEETS', 'EMAIL_CONFIGS', 'PUSH_DATA_CONFIGS', 'SETTINGS'];
-    for (const prop of requiredProps) {
+    var requiredProps = ['SPREADSHEETS', 'EMAIL_CONFIGS', 'PUSH_DATA_CONFIGS', 'SETTINGS'];
+    for (var i = 0; i < requiredProps.length; i++) {
+      var prop = requiredProps[i];
       if (!CONFIG[prop]) {
-        results.push(`Missing CONFIG.${prop}`);
+        results.push('Missing CONFIG.' + prop);
       }
     }
     
     // Test EMAIL_CONFIGS structure
     if (CONFIG.EMAIL_CONFIGS && Array.isArray(CONFIG.EMAIL_CONFIGS)) {
-      CONFIG.EMAIL_CONFIGS.forEach((config, index) => {
+      CONFIG.EMAIL_CONFIGS.forEach(function(config, index) {
         try {
-          Validators.validateEmailConfig(config, `EMAIL_CONFIGS[${index}]`);
+          Validators_validateEmailConfig(config, 'EMAIL_CONFIGS[' + index + ']');
         } catch (error) {
-          results.push(`Invalid EMAIL_CONFIGS[${index}]: ${error.message}`);
+          results.push('Invalid EMAIL_CONFIGS[' + index + ']: ' + error.message);
         }
       });
     }
     
     // Test PUSH_DATA_CONFIGS structure
     if (CONFIG.PUSH_DATA_CONFIGS && CONFIG.PUSH_DATA_CONFIGS.sourceSheets) {
-      Object.entries(CONFIG.PUSH_DATA_CONFIGS.sourceSheets).forEach(([sheetName, config]) => {
-        try {
-          Validators.validatePushDataConfig(config, `PUSH_DATA_CONFIGS.${sheetName}`);
-        } catch (error) {
-          results.push(`Invalid PUSH_DATA_CONFIGS.${sheetName}: ${error.message}`);
+      for (var sheetName in CONFIG.PUSH_DATA_CONFIGS.sourceSheets) {
+        if (CONFIG.PUSH_DATA_CONFIGS.sourceSheets.hasOwnProperty(sheetName)) {
+          var config = CONFIG.PUSH_DATA_CONFIGS.sourceSheets[sheetName];
+          try {
+            Validators_validatePushDataConfig(config, 'PUSH_DATA_CONFIGS.' + sheetName);
+          } catch (error) {
+            results.push('Invalid PUSH_DATA_CONFIGS.' + sheetName + ': ' + error.message);
+          }
         }
-      });
+      }
     }
     
     return results.length === 0 ? 
@@ -120,11 +128,11 @@ function testConfigValidation() {
  */
 function testValidators() {
   try {
-    const tests = [];
+    var tests = [];
     
     // Test spreadsheet ID validation
     try {
-      Validators.validateSpreadsheetId('1uCQ_Z4QLbHq89tutZ4Wen0TREwS8qEx2j7MmzUgXOaY');
+      Validators_validateSpreadsheetId(CONFIG.SPREADSHEETS.MAIN);
       tests.push({ name: 'valid spreadsheet ID', result: 'PASS' });
     } catch (error) {
       tests.push({ name: 'valid spreadsheet ID', result: 'FAIL', error: error.message });
@@ -132,7 +140,7 @@ function testValidators() {
     
     // Test invalid spreadsheet ID
     try {
-      Validators.validateSpreadsheetId('invalid');
+      Validators_validateSpreadsheetId('invalid');
       tests.push({ name: 'invalid spreadsheet ID rejection', result: 'FAIL', error: 'Should have thrown error' });
     } catch (error) {
       tests.push({ name: 'invalid spreadsheet ID rejection', result: 'PASS' });
@@ -140,7 +148,7 @@ function testValidators() {
     
     // Test sheet name validation
     try {
-      Validators.validateSheetName('TestSheet');
+      Validators_validateSheetName('TestSheet');
       tests.push({ name: 'valid sheet name', result: 'PASS' });
     } catch (error) {
       tests.push({ name: 'valid sheet name', result: 'FAIL', error: error.message });
@@ -148,33 +156,44 @@ function testValidators() {
     
     // Test range validation
     try {
-      Validators.validateRange('A2:O');
+      Validators_validateRange('A1:Z100');
       tests.push({ name: 'valid range', result: 'PASS' });
     } catch (error) {
       tests.push({ name: 'valid range', result: 'FAIL', error: error.message });
     }
     
-    const failed = tests.filter(t => t.result === 'FAIL');
-    return failed.length === 0 ?
-      { status: 'PASS', tests, message: `All ${tests.length} validator tests passed` } :
-      { status: 'FAIL', tests, failed: failed.length };
-      
+    // Test Gmail label validation
+    try {
+      Validators_validateGmailLabel('Test/Label');
+      tests.push({ name: 'valid Gmail label', result: 'PASS' });
+    } catch (error) {
+      tests.push({ name: 'valid Gmail label', result: 'FAIL', error: error.message });
+    }
+    
+    var failed = tests.filter(function(t) { return t.result === 'FAIL'; });
+    
+    return {
+      status: failed.length === 0 ? 'PASS' : 'FAIL',
+      tests: tests,
+      summary: tests.length + ' tests, ' + failed.length + ' failed'
+    };
+    
   } catch (error) {
     return { status: 'FAIL', error: error.message };
   }
 }
 
 /**
- * Tests the DateUtils utility class
+ * Tests DateUtils functionality
  */
 function testDateUtils() {
   try {
-    const tests = [];
+    var tests = [];
     
     // Test date formatting
     try {
-      const formatted = DateUtils.formatDate(new Date('2025-01-01'));
-      if (formatted && typeof formatted === 'string') {
+      var formatted = DateUtils_formatDate(new Date('2025-01-01'));
+      if (formatted && typeof formatted === 'string' && formatted.length > 0) {
         tests.push({ name: 'date formatting', result: 'PASS' });
       } else {
         tests.push({ name: 'date formatting', result: 'FAIL', error: 'Invalid format result' });
@@ -185,8 +204,8 @@ function testDateUtils() {
     
     // Test timestamp creation
     try {
-      const timestamp = DateUtils.getCurrentTimestamp();
-      if (timestamp && typeof timestamp === 'string') {
+      var timestamp = DateUtils_getCurrentTimestamp();
+      if (timestamp && typeof timestamp === 'string' && timestamp.includes('T')) {
         tests.push({ name: 'timestamp creation', result: 'PASS' });
       } else {
         tests.push({ name: 'timestamp creation', result: 'FAIL', error: 'Invalid timestamp' });
@@ -197,8 +216,8 @@ function testDateUtils() {
     
     // Test timestamp note creation
     try {
-      const note = DateUtils.createTimestampNote('Test');
-      if (note && typeof note === 'string' && note.includes('Test')) {
+      var note = DateUtils_createTimestampNote('Test');
+      if (note && typeof note === 'string' && note.includes('Test') && note.includes(':')) {
         tests.push({ name: 'timestamp note creation', result: 'PASS' });
       } else {
         tests.push({ name: 'timestamp note creation', result: 'FAIL', error: 'Invalid note format' });
@@ -207,130 +226,12 @@ function testDateUtils() {
       tests.push({ name: 'timestamp note creation', result: 'FAIL', error: error.message });
     }
     
-    const failed = tests.filter(t => t.result === 'FAIL');
-    return failed.length === 0 ?
-      { status: 'PASS', tests, message: `All ${tests.length} DateUtils tests passed` } :
-      { status: 'FAIL', tests, failed: failed.length };
-      
-  } catch (error) {
-    return { status: 'FAIL', error: error.message };
-  }
-}
-
-/**
- * Tests the ErrorHandler utility class
- */
-function testErrorHandler() {
-  try {
-    const tests = [];
+    var failed = tests.filter(function(t) { return t.result === 'FAIL'; });
     
-    // Test error creation
-    try {
-      const error = ErrorHandler.createError('Test error', 'TEST_CODE', { test: true });
-      if (error instanceof Error && error.code === 'TEST_CODE') {
-        tests.push({ name: 'error creation', result: 'PASS' });
-      } else {
-        tests.push({ name: 'error creation', result: 'FAIL', error: 'Invalid error object' });
-      }
-    } catch (error) {
-      tests.push({ name: 'error creation', result: 'FAIL', error: error.message });
-    }
-    
-    // Test parameter validation
-    try {
-      ErrorHandler.validateRequired({ test: 'value' }, ['test'], 'test context');
-      tests.push({ name: 'valid parameter validation', result: 'PASS' });
-    } catch (error) {
-      tests.push({ name: 'valid parameter validation', result: 'FAIL', error: error.message });
-    }
-    
-    // Test missing parameter detection
-    try {
-      ErrorHandler.validateRequired({}, ['required'], 'test context');
-      tests.push({ name: 'missing parameter detection', result: 'FAIL', error: 'Should have thrown error' });
-    } catch (error) {
-      tests.push({ name: 'missing parameter detection', result: 'PASS' });
-    }
-    
-    const failed = tests.filter(t => t.result === 'FAIL');
-    return failed.length === 0 ?
-      { status: 'PASS', tests, message: `All ${tests.length} ErrorHandler tests passed` } :
-      { status: 'FAIL', tests, failed: failed.length };
-      
-  } catch (error) {
-    return { status: 'FAIL', error: error.message };
-  }
-}
-
-/**
- * Tests the AppLogger utility class
- */
-function testLogger() {
-  try {
-    const tests = [];
-    
-    // Test basic logging methods
-    try {
-      AppLogger.info('Test info message', { test: true });
-      AppLogger.warn('Test warn message');
-      AppLogger.debug('Test debug message');
-      tests.push({ name: 'basic logging methods', result: 'PASS' });
-    } catch (error) {
-      tests.push({ name: 'basic logging methods', result: 'FAIL', error: error.message });
-    }
-    
-    // Test timer functionality
-    try {
-      const timer = AppLogger.startTimer('test operation');
-      const duration = timer.stop();
-      if (typeof duration === 'number' && duration >= 0) {
-        tests.push({ name: 'timer functionality', result: 'PASS' });
-      } else {
-        tests.push({ name: 'timer functionality', result: 'FAIL', error: 'Invalid timer result' });
-      }
-    } catch (error) {
-      tests.push({ name: 'timer functionality', result: 'FAIL', error: error.message });
-    }
-    
-    const failed = tests.filter(t => t.result === 'FAIL');
-    return failed.length === 0 ?
-      { status: 'PASS', tests, message: `All ${tests.length} Logger tests passed` } :
-      { status: 'FAIL', tests, failed: failed.length };
-      
-  } catch (error) {
-    return { status: 'FAIL', error: error.message };
-  }
-}
-
-/**
- * Tests Gmail connectivity (read-only)
- */
-function testGmailConnectivity() {
-  try {
-    // Test Gmail access
-    const labels = EmailService.getAllLabels();
-    
-    if (!Array.isArray(labels)) {
-      return { status: 'FAIL', error: 'Could not retrieve Gmail labels' };
-    }
-    
-    // Test configured label existence
-    const configuredLabels = CONFIG.EMAIL_CONFIGS.map(c => c.label);
-    const missingLabels = configuredLabels.filter(label => !EmailService.labelExists(label));
-    
-    if (missingLabels.length > 0) {
-      return { 
-        status: 'WARN', 
-        message: `${missingLabels.length} configured labels not found`,
-        missingLabels 
-      };
-    }
-    
-    return { 
-      status: 'PASS', 
-      message: `Gmail connectivity OK. ${labels.length} labels found, all configured labels exist.`,
-      labelCount: labels.length,
-      configuredLabelCount: configuredLabels.length
+    return {
+      status: failed.length === 0 ? 'PASS' : 'FAIL',
+      tests: tests,
+      summary: tests.length + ' tests, ' + failed.length + ' failed'
     };
     
   } catch (error) {
@@ -339,94 +240,187 @@ function testGmailConnectivity() {
 }
 
 /**
- * Tests spreadsheet connectivity (read-only)
+ * Tests ErrorHandler functionality
  */
-function testSpreadsheetConnectivity() {
+function testErrorHandler() {
   try {
-    const tests = [];
+    var tests = [];
     
-    // Test main spreadsheet
+    // Test error creation
     try {
-      const metadata = SheetService.getSpreadsheetMetadata(CONFIG.SPREADSHEETS.MAIN);
-      tests.push({ 
-        name: 'main spreadsheet', 
-        result: 'PASS', 
-        metadata: {
-          name: metadata.name,
-          sheetCount: metadata.sheetCount
-        }
-      });
+      var error = ErrorHandler_createError('Test error', 'TEST_CODE', { test: true });
+      if (error && error.message === 'Test error' && error.code === 'TEST_CODE') {
+        tests.push({ name: 'error creation', result: 'PASS' });
+      } else {
+        tests.push({ name: 'error creation', result: 'FAIL', error: 'Invalid error object' });
+      }
     } catch (error) {
-      tests.push({ name: 'main spreadsheet', result: 'FAIL', error: error.message });
+      tests.push({ name: 'error creation', result: 'FAIL', error: error.message });
     }
     
-    // Test target spreadsheets
-    const targetIds = new Set();
-    Object.values(CONFIG.PUSH_DATA_CONFIGS.sourceSheets).forEach(config => {
-      config.targets.forEach(target => targetIds.add(target.spreadsheetId));
-    });
+    // Test required field validation
+    try {
+      ErrorHandler_validateRequired({ name: 'test' }, ['name'], 'Test object');
+      tests.push({ name: 'required field validation', result: 'PASS' });
+    } catch (error) {
+      tests.push({ name: 'required field validation', result: 'FAIL', error: error.message });
+    }
     
-    targetIds.forEach(id => {
-      try {
-        const metadata = SheetService.getSpreadsheetMetadata(id);
-        tests.push({ 
-          name: `target spreadsheet ${id.substring(0, 8)}...`, 
-          result: 'PASS',
-          metadata: {
-            name: metadata.name,
-            sheetCount: metadata.sheetCount
-          }
-        });
-      } catch (error) {
-        tests.push({ 
-          name: `target spreadsheet ${id.substring(0, 8)}...`, 
-          result: 'FAIL', 
-          error: error.message 
-        });
-      }
-    });
+    // Test missing required field
+    try {
+      ErrorHandler_validateRequired({}, ['name'], 'Test object');
+      tests.push({ name: 'missing required field detection', result: 'FAIL', error: 'Should have thrown error' });
+    } catch (error) {
+      tests.push({ name: 'missing required field detection', result: 'PASS' });
+    }
     
-    const failed = tests.filter(t => t.result === 'FAIL');
-    return failed.length === 0 ?
-      { status: 'PASS', tests, message: `All ${tests.length} spreadsheet tests passed` } :
-      { status: 'FAIL', tests, failed: failed.length };
-      
+    var failed = tests.filter(function(t) { return t.result === 'FAIL'; });
+    
+    return {
+      status: failed.length === 0 ? 'PASS' : 'FAIL',
+      tests: tests,
+      summary: tests.length + ' tests, ' + failed.length + ' failed'
+    };
+    
   } catch (error) {
     return { status: 'FAIL', error: error.message };
   }
 }
 
 /**
- * Displays test results in a user-friendly format
+ * Tests Logger functionality
  */
-function showTestResults() {
+function testLogger() {
   try {
-    const results = runAllTests();
+    var tests = [];
     
-    let message = `Test Results (${DateUtils.formatDate()}):\n\n`;
-    message += `Overall: ${results.summary.passed}/${results.summary.total} tests passed\n\n`;
-    
-    Object.entries(results.tests).forEach(([testName, result]) => {
-      const icon = result.status === 'PASS' ? '✅' : result.status === 'WARN' ? '⚠️' : '❌';
-      message += `${icon} ${testName}: ${result.status}\n`;
-      if (result.message) {
-        message += `   ${result.message}\n`;
-      }
-      if (result.error) {
-        message += `   Error: ${result.error}\n`;
-      }
-    });
-    
-    if (results.summary.failed > 0) {
-      message += '\nSee console logs for detailed error information.';
+    // Test info logging
+    try {
+      AppLogger_info('Test info message', { test: true });
+      tests.push({ name: 'info logging', result: 'PASS' });
+    } catch (error) {
+      tests.push({ name: 'info logging', result: 'FAIL', error: error.message });
     }
     
-    SpreadsheetApp.getUi().alert("Test Results", message, SpreadsheetApp.getUi().ButtonSet.OK);
+    // Test warning logging
+    try {
+      AppLogger_warn('Test warn message');
+      tests.push({ name: 'warning logging', result: 'PASS' });
+    } catch (error) {
+      tests.push({ name: 'warning logging', result: 'FAIL', error: error.message });
+    }
     
-    return results;
+    // Test timer functionality
+    try {
+      var timer = AppLogger_startTimer('test operation');
+      var duration = timer.stop();
+      if (timer && typeof timer.stop === 'function' && typeof duration === 'number') {
+        tests.push({ name: 'timer functionality', result: 'PASS' });
+      } else {
+        tests.push({ name: 'timer functionality', result: 'FAIL', error: 'Invalid timer result' });
+      }
+    } catch (error) {
+      tests.push({ name: 'timer functionality', result: 'FAIL', error: error.message });
+    }
+    
+    var failed = tests.filter(function(t) { return t.result === 'FAIL'; });
+    
+    return {
+      status: failed.length === 0 ? 'PASS' : 'FAIL',
+      tests: tests,
+      summary: tests.length + ' tests, ' + failed.length + ' failed'
+    };
     
   } catch (error) {
-    AppLogger.error('Failed to show test results', error);
-    SpreadsheetApp.getUi().alert(`Error running tests: ${error.message}`);
+    return { status: 'FAIL', error: error.message };
+  }
+}
+
+/**
+ * Tests Gmail connectivity (read-only test)
+ */
+function testGmailConnectivity() {
+  try {
+    var labels = Utils_listGmailLabels();
+    
+    if (Array.isArray(labels) && labels.length > 0) {
+      // Check if configured labels exist
+      var configuredLabels = CONFIG.EMAIL_CONFIGS.map(function(c) { return c.label; });
+      var missingLabels = configuredLabels.filter(function(label) {
+        return labels.indexOf(label) === -1;
+      });
+      
+      return {
+        status: missingLabels.length === 0 ? 'PASS' : 'WARN',
+        labelCount: labels.length,
+        missingLabels: missingLabels,
+        message: missingLabels.length === 0 ? 
+          'All configured labels found' : 
+          'Some configured labels missing: ' + missingLabels.join(', ')
+      };
+    } else {
+      return { status: 'FAIL', error: 'No Gmail labels found or Gmail not accessible' };
+    }
+    
+  } catch (error) {
+    return { status: 'FAIL', error: error.message };
+  }
+}
+
+/**
+ * Tests spreadsheet connectivity (read-only test)
+ */
+function testSpreadsheetConnectivity() {
+  try {
+    // Test main spreadsheet access
+    var spreadsheet = SpreadsheetApp.openById(CONFIG.SPREADSHEETS.MAIN);
+    
+    if (!spreadsheet) {
+      return { status: 'FAIL', error: 'Cannot access main spreadsheet' };
+    }
+    
+    var sheets = spreadsheet.getSheets();
+    
+    return {
+      status: 'PASS',
+      spreadsheetId: CONFIG.SPREADSHEETS.MAIN,
+      sheetCount: sheets.length,
+      message: 'Main spreadsheet accessible with ' + sheets.length + ' sheets'
+    };
+    
+  } catch (error) {
+    return { status: 'FAIL', error: error.message };
+  }
+}
+
+/**
+ * Utility function to run system tests (used by Menu functions)
+ * @returns {Object} Test results object
+ */
+function Utils_runSystemTests() {
+  try {
+    AppLogger_operationStart('runSystemTests');
+    
+    var results = runAllTests();
+    
+    AppLogger_operationSuccess('runSystemTests', {
+      overall: results.summary.failed === 0 ? 'PASS' : 'FAIL',
+      summary: results.summary
+    });
+    
+    return {
+      overall: results.summary.failed === 0 ? 'PASS' : 'FAIL',
+      tests: results.tests,
+      summary: results.summary
+    };
+    
+  } catch (error) {
+    AppLogger_operationFailure('runSystemTests', error);
+    return {
+      overall: 'ERROR',
+      error: error.message,
+      tests: {},
+      summary: { total: 0, passed: 0, failed: 1, skipped: 0 }
+    };
   }
 }

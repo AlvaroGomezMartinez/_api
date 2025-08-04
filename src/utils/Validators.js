@@ -26,7 +26,11 @@ function Validators_validateSpreadsheetId(id, context) {
   // Basic format validation for Google Spreadsheet IDs
   var idPattern = /^[a-zA-Z0-9_-]{44}$/;
   if (!idPattern.test(id)) {
-    AppLogger_warn(context + ': Spreadsheet ID format may be invalid', { id: id });
+    throw ErrorHandler_createError(
+      context + ': Spreadsheet ID format is invalid',
+      ERROR_CODES.INVALID_PARAMETERS,
+      { provided: id, expectedFormat: '44 characters (letters, numbers, underscore, dash)' }
+    );
   }
 }
 
