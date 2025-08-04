@@ -31,7 +31,7 @@ var CONFIG = {
    * @property {string} NAHS_TRANSITION_NOTES - NAHS transition notes spreadsheet ID
    */
   SPREADSHEETS: {
-    MAIN: "1uCQ_Z4QLbHq89tutZ4Wen0TREwS8qEx2j7MmzUgXOaY", // TODO: Verify this spreadsheet exists and is accessible
+    MAIN: "1uCQ_Z4QLbHq89tutZ4Wen0TREwS8qEx2j7MmzUgXOaY",
     NAHS_CRITERIA: "1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA",
     NAMS_CRITERIA: "1q61g_br0jmqtAvyQhNYto1jezfzjttmsKAAG-pznXak",
     NAHS_TRANSITION_NOTES: "14-nvlNOLWebnJJOQNZPnglWx0OuE5U-_xEbXGodND6E",
@@ -62,7 +62,7 @@ var CONFIG = {
       label:
         "Campuses/NAHS/Transition Information Workflow Project/Transition Information Workflow Project Contact Information",
       sheetName: "ContactInfo",
-      rangeToClear: "A2:J",
+      rangeToClear: "A2:O",
     },
     {
       label:
