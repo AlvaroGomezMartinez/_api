@@ -30,35 +30,35 @@
  * @returns {Array<Object>} Processing results for each configuration
  */
 function updateSheetsFromEmail() {
-  const timer = AppLogger.startTimer('updateSheetsFromEmail');
+  var timer = AppLogger_startTimer('updateSheetsFromEmail');
   
   try {
-    AppLogger.operationStart('updateSheetsFromEmail', {
+    AppLogger_operationStart('updateSheetsFromEmail', {
       triggerType: 'scheduled',
       configCount: CONFIG.EMAIL_CONFIGS.length
     });
     
     // Use the refactored EmailProcessor
-    const results = EmailProcessor.processAllConfigs();
+    var results = EmailProcessor_processAllConfigs();
     
     // Log summary for compatibility with existing monitoring
-    const successful = results.filter(r => r.success).length;
-    const failed = results.length - successful;
+    var successful = results.filter(function(r) { return r.success; }).length;
+    var failed = results.length - successful;
     
     if (failed === 0) {
       Logger.log("All sheets updated successfully!");
-      AppLogger.operationSuccess('updateSheetsFromEmail', {
+      AppLogger_operationSuccess('updateSheetsFromEmail', {
         total: results.length,
-        successful,
-        failed
+        successful: successful,
+        failed: failed
       }, timer.stop());
     } else {
-      Logger.log(`Completed with ${successful} successful and ${failed} failed updates`);
-      AppLogger.warn('updateSheetsFromEmail completed with some failures', {
+      Logger.log('Completed with ' + successful + ' successful and ' + failed + ' failed updates');
+      AppLogger_warn('updateSheetsFromEmail completed with some failures', {
         total: results.length,
-        successful,
-        failed,
-        failures: results.filter(r => !r.success)
+        successful: successful,
+        failed: failed,
+        failures: results.filter(function(r) { return !r.success; })
       });
     }
     
@@ -66,9 +66,9 @@ function updateSheetsFromEmail() {
     
   } catch (error) {
     timer.stop();
-    const errorMessage = ErrorHandler.handle(error, 'updateSheetsFromEmail');
-    Logger.log(`Error: ${errorMessage}`);
-    AppLogger.operationFailure('updateSheetsFromEmail', error);
+    var errorMessage = ErrorHandler_handle(error, 'updateSheetsFromEmail');
+    Logger.log('Error: ' + errorMessage);
+    AppLogger_operationFailure('updateSheetsFromEmail', error);
     throw error;
   }
 }
@@ -85,28 +85,28 @@ function updateSheetsFromEmail() {
  */
 function processEmailToSheet(labelName, spreadsheetId, sheetName, rangeToClear) {
   try {
-    AppLogger.warn('Using deprecated processEmailToSheet function', {
-      labelName,
-      spreadsheetId,
-      sheetName,
-      rangeToClear
+    AppLogger_warn('Using deprecated processEmailToSheet function', {
+      labelName: labelName,
+      spreadsheetId: spreadsheetId,
+      sheetName: sheetName,
+      rangeToClear: rangeToClear
     });
     
     // Create a temporary config object
-    const config = {
+    var config = {
       label: labelName,
       sheetName: sheetName,
       rangeToClear: rangeToClear
     };
     
     // Use the new EmailProcessor
-    const result = EmailProcessor.processSingleConfig(config, 'processEmailToSheet_legacy');
+    var result = EmailProcessor_processSingleConfig(config, 'processEmailToSheet_legacy');
     
-    Logger.log(`Data inserted into sheet "${sheetName}" successfully!`);
+    Logger.log('Data inserted into sheet "' + sheetName + '" successfully!');
     return result;
     
   } catch (error) {
-    const errorMessage = ErrorHandler.handle(error, 'processEmailToSheet (legacy)');
+    var errorMessage = ErrorHandler_handle(error, 'processEmailToSheet (legacy)');
     throw error;
   }
 }
@@ -121,13 +121,13 @@ function processEmailToSheet(labelName, spreadsheetId, sheetName, rangeToClear) 
  */
 function processExcelData(fileBlob) {
   try {
-    AppLogger.warn('Using deprecated processExcelData function');
+    AppLogger_warn('Using deprecated processExcelData function');
     
     // Use the new DriveService
-    return DriveService.processExcelData(fileBlob, 'processExcelData_legacy');
+    return DriveService_processExcelData(fileBlob, 'processExcelData_legacy');
     
   } catch (error) {
-    const errorMessage = ErrorHandler.handle(error, 'processExcelData (legacy)');
+    var errorMessage = ErrorHandler_handle(error, 'processExcelData (legacy)');
     throw error;
   }
 }
@@ -143,9 +143,9 @@ function processExcelData(fileBlob) {
  */
 function processSpecificLabel(labelName) {
   try {
-    return EmailProcessor.processSpecificLabel(labelName);
+    return EmailProcessor_processSpecificLabel(labelName);
   } catch (error) {
-    const errorMessage = ErrorHandler.handle(error, 'processSpecificLabel');
+    var errorMessage = ErrorHandler_handle(error, 'processSpecificLabel');
     throw error;
   }
 }
@@ -156,9 +156,9 @@ function processSpecificLabel(labelName) {
  */
 function getEmailProcessingStatus() {
   try {
-    return EmailProcessor.getProcessingStatus();
+    return EmailProcessor_getProcessingStatus();
   } catch (error) {
-    const errorMessage = ErrorHandler.handle(error, 'getEmailProcessingStatus');
+    var errorMessage = ErrorHandler_handle(error, 'getEmailProcessingStatus');
     throw error;
   }
 }
@@ -169,9 +169,9 @@ function getEmailProcessingStatus() {
  */
 function runEmailProcessingDryRun() {
   try {
-    return EmailProcessor.dryRun();
+    return EmailProcessor_dryRun();
   } catch (error) {
-    const errorMessage = ErrorHandler.handle(error, 'runEmailProcessingDryRun');
+    var errorMessage = ErrorHandler_handle(error, 'runEmailProcessingDryRun');
     throw error;
   }
 }
@@ -182,9 +182,9 @@ function runEmailProcessingDryRun() {
  */
 function pushDataToSheets() {
   try {
-    return DataPusher.pushAllData();
+    return DataPusher_pushAllData();
   } catch (error) {
-    const errorMessage = ErrorHandler.handle(error, 'pushDataToSheets');
+    var errorMessage = ErrorHandler_handle(error, 'pushDataToSheets');
     throw error;
   }
 }
@@ -195,9 +195,9 @@ function pushDataToSheets() {
  */
 function getPushDataStatus() {
   try {
-    return DataPusher.getPushDataStatus();
+    return DataPusher_getPushDataStatus();
   } catch (error) {
-    const errorMessage = ErrorHandler.handle(error, 'getPushDataStatus');
+    var errorMessage = ErrorHandler_handle(error, 'getPushDataStatus');
     throw error;
   }
 }
@@ -208,9 +208,9 @@ function getPushDataStatus() {
  */
 function runSystemTests() {
   try {
-    return Utils.runSystemTests();
+    return Utils_runSystemTests();
   } catch (error) {
-    const errorMessage = ErrorHandler.handle(error, 'runSystemTests');
+    var errorMessage = ErrorHandler_handle(error, 'runSystemTests');
     throw error;
   }
 }
@@ -221,9 +221,9 @@ function runSystemTests() {
  */
 function getConfigurationSummary() {
   try {
-    return Utils.getConfigurationSummary();
+    return Utils_getConfigurationSummary();
   } catch (error) {
-    const errorMessage = ErrorHandler.handle(error, 'getConfigurationSummary');
+    var errorMessage = ErrorHandler_handle(error, 'getConfigurationSummary');
     throw error;
   }
 }
