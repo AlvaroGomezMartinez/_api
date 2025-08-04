@@ -1,7 +1,23 @@
+/**
+ * Menu and UI functions for the NISD API project.
+ * Provides spreadsheet menu items and dialog functionality.
+ * Refactored to use the new modular architecture.
+ * 
+ * @author Alvaro Gomez, Academic Technology Coach
+ */
+
+/**
+ * Creates the custom menu when the spreadsheet is opened
+ */
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
   ui.createMenu('🚩 Push Data')
     .addItem('Push Data to Sheets', 'pushDataToSheets')
+    .addSeparator()
+    .addItem('Check Push Status', 'showPushDataStatus')
+    .addItem('Test Email Processing', 'showEmailProcessingStatus')
+    .addSeparator()
+    .addItem('Run System Tests', 'showSystemTestResults')
     .addToUi();
 }
 
@@ -9,82 +25,233 @@ function onOpen() {
  * Gets called when the user selects the 'Push Data to Sheets' item in the menu.
  * Pushes data from the current spreadsheet to specific sheets in two target spreadsheets
  * (NAHS Criteria Sheet and NAMS 2024-25 Criteria Sheet).
+ * Now uses the refactored DataPusher class.
  */
 function pushDataToSheets() {
+  const timer = AppLogger.startTimer('pushDataToSheets_menu');
+  
   try {
-    const currentSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    AppLogger.operationStart('pushDataToSheets (menu)', {
+      trigger: 'user_menu'
+    });
 
-    /** @type {Object.<string, any[][]>} - Mapping of sheet names to their data ranges */
-    const sourceData = {
-      "Alt_HS_Attendance_Enrollment_Count": currentSpreadsheet.getSheetByName("Alt_HS_Attendance_Enrollment_Count").getRange("A2:H").getValues(),
-      "Entry_Withdrawal": currentSpreadsheet.getSheetByName("Entry_Withdrawal").getRange("A2:I").getValues(),
-      "Allergies": currentSpreadsheet.getSheetByName("Allergies").getRange("A2:E").getValues(),
-    };
-
-    const targetSpreadsheet1 = SpreadsheetApp.openById("1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA");
-
-    // Update Alt_HS_Attendance_Enrollment_Count in Target Spreadsheet 1
-    updateTargetSheet(
-      targetSpreadsheet1.getSheetByName("Alt_HS_Attendance_Enrollment_Count"),
-      sourceData["Alt_HS_Attendance_Enrollment_Count"]
-    );
-
-    // Update Entry_Withdrawal in Target Spreadsheet 1
-    updateTargetSheet(
-      targetSpreadsheet1.getSheetByName("Entry_Withdrawal"),
-      sourceData["Entry_Withdrawal"]
-    );
-
-    const targetSpreadsheet2 = SpreadsheetApp.openById("1O3DSgTbhphNVDXLmlGkEiyVejsL_l4fPsf2cJJpQpTo");
-
-    // Update Allergies in Target Spreadsheet 2
-    updateTargetSheet(
-      targetSpreadsheet2.getSheetByName("Allergies"),
-      sourceData["Allergies"]
-    );
-
-    // Show custom dialog box with success message and links
-    showSuccessDialog();
+    // Use the refactored DataPusher
+    const results = DataPusher.pushAllData();
+    
+    // Check if all operations were successful
+    const successful = results.filter(r => r.success).length;
+    const failed = results.length - successful;
+    
+    if (failed === 0) {
+      // Show custom dialog box with success message and links
+      showSuccessDialog();
+      AppLogger.operationSuccess('pushDataToSheets (menu)', {
+        total: results.length,
+        successful,
+        failed
+      }, timer.stop());
+    } else {
+      // Show error dialog with details
+      showErrorDialog(results);
+      AppLogger.warn('pushDataToSheets (menu) completed with failures', {
+        total: results.length,
+        successful,
+        failed
+      });
+    }
 
   } catch (error) {
-    console.error("An error occurred in pushDataToSheets:", error.message, error.stack);
-
-    SpreadsheetApp.getUi().alert(`An error occurred: ${error.message}`);
+    timer.stop();
+    const errorMessage = ErrorHandler.handle(error, 'pushDataToSheets (menu)');
+    AppLogger.operationFailure('pushDataToSheets (menu)', error);
+    
+    SpreadsheetApp.getUi().alert(`An error occurred: ${errorMessage}`);
   }
 }
 
 /**
  * Shows a custom success dialog with hyperlinks.
+ * Now uses configuration-driven links.
  */
 function showSuccessDialog() {
-  const htmlContent = `
-    <div style="font-family: Arial, sans-serif; font-size: 14px;">
-      <p>Data was pushed successfully to the reports.</p>
-      <ul>
-        <li><a href="https://docs.google.com/spreadsheets/d/1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA/edit?gid=524766497#gid=524766497" target="_blank">NAHS Criteria Sheet</a></li>
-        <li><a href="https://docs.google.com/spreadsheets/d/1O3DSgTbhphNVDXLmlGkEiyVejsL_l4fPsf2cJJpQpTo/edit?gid=93840204#gid=93840204" target="_blank">NAMS 2024-25 Criteria Sheet</a></li>
-        <li><a href="https://docs.google.com/spreadsheets/d/14-nvlNOLWebnJJOQNZPnglWx0OuE5U-_xEbXGodND6E/edit?gid=1422083122#gid=1422083122" target="_blank">NAHS 24-25 Student Transition Notes</a></li>
-      </ul>
-    </div>
-  `;
-  
-  const htmlOutput = HtmlService.createHtmlOutput(htmlContent)
-    .setWidth(400)
-    .setHeight(200);
-  
-  SpreadsheetApp.getUi().showModalDialog(htmlOutput, "Data Push");
+  try {
+    const htmlContent = DataPusher.createSuccessDialogContent();
+    
+    const htmlOutput = HtmlService.createHtmlOutput(htmlContent)
+      .setWidth(400)
+      .setHeight(200);
+    
+    SpreadsheetApp.getUi().showModalDialog(htmlOutput, "Data Push Successful");
+    
+    AppLogger.info('Success dialog displayed');
+    
+  } catch (error) {
+    AppLogger.error('Failed to show success dialog', error);
+    SpreadsheetApp.getUi().alert('Data was pushed successfully to the reports.');
+  }
 }
 
+/**
+ * Shows an error dialog with details about failed operations
+ * @param {Array<Object>} results - Array of operation results
+ */
+function showErrorDialog(results) {
+  try {
+    const failed = results.filter(r => !r.success);
+    const successful = results.filter(r => r.success);
+    
+    let message = `Push completed with ${successful.length} successful and ${failed.length} failed operations.\n\n`;
+    
+    if (failed.length > 0) {
+      message += "Failed operations:\n";
+      failed.forEach(result => {
+        message += `• ${result.sourceSheet}: ${result.error}\n`;
+      });
+    }
+    
+    if (successful.length > 0) {
+      message += "\nSuccessful operations:\n";
+      successful.forEach(result => {
+        message += `• ${result.sourceSheet}\n`;
+      });
+    }
+    
+    SpreadsheetApp.getUi().alert("Data Push Results", message, SpreadsheetApp.getUi().ButtonSet.OK);
+    
+    AppLogger.info('Error dialog displayed', {
+      successful: successful.length,
+      failed: failed.length
+    });
+    
+  } catch (error) {
+    AppLogger.error('Failed to show error dialog', error);
+    SpreadsheetApp.getUi().alert('Some operations failed. Check the logs for details.');
+  }
+}
 
 /**
+ * Shows the current push data status
+ */
+function showPushDataStatus() {
+  try {
+    AppLogger.operationStart('showPushDataStatus');
+    
+    const status = DataPusher.getPushDataStatus();
+    
+    let message = `Push Data Status (${DateUtils.formatDate()}):\n\n`;
+    
+    status.sourceSheets.forEach(sheet => {
+      if (sheet.error) {
+        message += `❌ ${sheet.sheetName}: ERROR - ${sheet.error}\n`;
+      } else {
+        message += `✅ ${sheet.sheetName}:\n`;
+        message += `   • Data: ${sheet.currentRowCount} rows, ${sheet.currentColumnCount} columns\n`;
+        message += `   • Range: ${sheet.range}\n`;
+        message += `   • Targets: ${sheet.targetCount} configured\n`;
+        
+        const accessibleTargets = sheet.targets.filter(t => t.accessible).length;
+        if (accessibleTargets < sheet.targetCount) {
+          message += `   ⚠️ Warning: ${sheet.targetCount - accessibleTargets} targets not accessible\n`;
+        }
+        message += '\n';
+      }
+    });
+    
+    SpreadsheetApp.getUi().alert("Push Data Status", message, SpreadsheetApp.getUi().ButtonSet.OK);
+    
+    AppLogger.operationSuccess('showPushDataStatus');
+    
+  } catch (error) {
+    AppLogger.operationFailure('showPushDataStatus', error);
+    SpreadsheetApp.getUi().alert(`Error getting push data status: ${error.message}`);
+  }
+}
+
+/**
+ * Shows the current email processing status
+ */
+function showEmailProcessingStatus() {
+  try {
+    AppLogger.operationStart('showEmailProcessingStatus');
+    
+    const status = EmailProcessor.getProcessingStatus();
+    
+    let message = `Email Processing Status (${DateUtils.formatDate()}):\n\n`;
+    
+    status.configurations.forEach(config => {
+      if (config.error) {
+        message += `❌ ${config.sheetName}: ERROR - ${config.error}\n`;
+      } else {
+        message += `${config.labelExists ? '✅' : '❌'} ${config.sheetName}:\n`;
+        message += `   • Label: ${config.labelExists ? 'Found' : 'Not Found'}\n`;
+        message += `   • Emails: ${config.emailCount}\n`;
+        if (config.latestEmailDate) {
+          message += `   • Latest: ${DateUtils.formatDate(config.latestEmailDate)}\n`;
+        }
+        message += `   • Range: ${config.rangeToClear}\n\n`;
+      }
+    });
+    
+    SpreadsheetApp.getUi().alert("Email Processing Status", message, SpreadsheetApp.getUi().ButtonSet.OK);
+    
+    AppLogger.operationSuccess('showEmailProcessingStatus');
+    
+  } catch (error) {
+    AppLogger.operationFailure('showEmailProcessingStatus', error);
+    SpreadsheetApp.getUi().alert(`Error getting email processing status: ${error.message}`);
+  }
+}
+
+/**
+ * Shows system test results
+ */
+function showSystemTestResults() {
+  try {
+    AppLogger.operationStart('showSystemTestResults');
+    
+    const results = Utils.runSystemTests();
+    
+    let message = `System Test Results (${DateUtils.formatDate()}):\n\n`;
+    message += `Overall Status: ${results.overall}\n\n`;
+    
+    // Summary of test categories
+    Object.entries(results.tests).forEach(([testName, testResult]) => {
+      if (testResult.error) {
+        message += `❌ ${testName}: ERROR\n`;
+      } else if (testName === 'emailProcessorDryRun') {
+        message += `${testResult.valid ? '✅' : '⚠️'} ${testName}: ${testResult.valid ? 'PASS' : 'ISSUES'}\n`;
+      } else {
+        message += `✅ ${testName}: PASS\n`;
+      }
+    });
+    
+    if (results.overall !== 'PASS') {
+      message += '\nSee console logs for detailed error information.';
+    }
+    
+    SpreadsheetApp.getUi().alert("System Test Results", message, SpreadsheetApp.getUi().ButtonSet.OK);
+    
+    AppLogger.operationSuccess('showSystemTestResults', { overall: results.overall });
+    
+  } catch (error) {
+    AppLogger.operationFailure('showSystemTestResults', error);
+    SpreadsheetApp.getUi().alert(`Error running system tests: ${error.message}`);
+  }
+}
+
+/**
+ * Legacy function for backward compatibility
  * Updates the target sheet with new data, clearing old data and appending a timestamp note in cell A1.
  * 
+ * @deprecated Use SheetService.updateSheet() instead
  * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet - The target sheet to update.
  * @param {any[][]} data - The data to write to the target sheet. Each sub-array represents a row.
  * @throws Will throw an error if the target sheet is not found or if other issues occur during the update process.
  */
 function updateTargetSheet(sheet, data) {
   try {
+    AppLogger.warn('Using deprecated updateTargetSheet function');
+    
     if (!sheet) {
       throw new Error("Target sheet not found!");
     }
@@ -101,14 +268,11 @@ function updateTargetSheet(sheet, data) {
     }
 
     // Add a note in cell A1 with the update timestamp
-    const currentDate = new Date();
-    sheet.getRange("A1").setNote(`Updated on: ${currentDate.toLocaleDateString()} by script`);
+    const timestampNote = DateUtils.createScriptTimestampNote();
+    sheet.getRange("A1").setNote(timestampNote);
 
   } catch (error) {
-    // Log the error specific to the sheet update process
-    console.error(`An error occurred in updateTargetSheet for sheet "${sheet ? sheet.getName() : "Unknown"}":`, error.message, error.stack);
-
-    // Re-throw the error to be caught by the parent function
+    const errorMessage = ErrorHandler.handle(error, 'updateTargetSheet (legacy)');
     throw error;
   }
 }
