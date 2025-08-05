@@ -47,7 +47,7 @@ var CONFIG = {
    * // Each configuration object:
    * {
    *   label: "Campuses/NAHS/Reports/Daily",
-   *   sheetName: "DailyData", 
+   *   sheetName: "DailyData",
    *   rangeToClear: "A2:Z"
    * }
    */
@@ -69,6 +69,18 @@ var CONFIG = {
         "Campuses/NAHS/Transition Information Workflow Project/Transition Information Workflow Project Entry/Withdrawal",
       sheetName: "Entry_Withdrawal2",
       rangeToClear: "A2:O",
+    },
+    {
+      label:
+        "Campuses/NAHS/Transition Information Workflow Project/Alt_HS_Attendance Enrollment_Count",
+      sheetName: "Alt_HS_Attendance_Enrollment_Count",
+      rangeToClear: "A2:H",
+    },
+    {
+      label:
+        "Campuses/NAHS/Transition Information Workflow Project/Alt_MS_Attendance Enrollment_Count",
+      sheetName: "Alt_MS_Attendance_Enrollment_Count",
+      rangeToClear: "A2:H",
     },
   ],
 
@@ -98,6 +110,15 @@ var CONFIG = {
           {
             spreadsheetId: "1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA",
             sheetName: "Alt_HS_Attendance_Enrollment_Count",
+          },
+        ],
+      },
+      Alt_MS_Attendance_Enrollment_Count: {
+        range: "A2:H",
+        targets: [
+          {
+            spreadsheetId: "1q61g_br0jmqtAvyQhNYto1jezfzjttmsKAAG-pznXak",
+            sheetName: "Alt_MS_Attendance_Enrollment_Count",
           },
         ],
       },
@@ -153,7 +174,7 @@ var CONFIG = {
       url: "https://docs.google.com/spreadsheets/d/1q61g_br0jmqtAvyQhNYto1jezfzjttmsKAAG-pznXak/edit?gid=1453553637#gid=1453553637",
     },
     {
-      name: "NAHS 24-25 Student Transition Notes",
+      name: "NAHS 2025-26 Student Transition Notes",
       url: "https://docs.google.com/spreadsheets/d/14-nvlNOLWebnJJOQNZPnglWx0OuE5U-_xEbXGodND6E/edit?gid=1422083122#gid=1422083122",
     },
   ],
@@ -176,7 +197,8 @@ var RANGES = {
   ENTRY_WITHDRAWAL_CLEAR: "A2:O", // Range refers to the Entry_Withdrawal2 sheet in the _DataLake spreadsheet
   ALT_HS_ATTENDANCE: "A2:H", // Range refers to the Alt_HS_Attendance_Enrollment_Count sheet in the NAHS Criteria spreadsheet
   ENTRY_WITHDRAWAL_MANUAL: "A2:I", // Range refers to the Entry_Withdrawal sheet in the NAHS Criteria spreadsheet
-  ALLERGIES: "A2:E" // Range refers to the Allergies sheet in the NAMS 2025-26 Criteria spreadsheet
+  ALLERGIES: "A2:E", // Range refers to the Allergies sheet in the NAMS 2025-26 Criteria spreadsheet
+  ALT_MS_ATTENDANCE: "A2:H" // Range refers to the Alt_MS_Attendance_Enrollment_Count sheet in the NAMS 2025-26 Criteria spreadsheet
 };
 
 /**
