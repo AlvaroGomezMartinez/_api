@@ -66,19 +66,19 @@ var CONFIG = {
     },
     {
       label:
-        "Campuses/NAHS/Transition Information Workflow Project/Transition Information Workflow Project Entry/Withdrawal",
+        "Campuses/NAHS/Transition Information Workflow Project/Transition Information Workflow Entry_Withdrawal",
       sheetName: "Entry_Withdrawal2",
       rangeToClear: "A2:O",
     },
     {
       label:
-        "Campuses/NAHS/Transition Information Workflow Project/Alt_HS_Attendance Enrollment_Count",
+        "Campuses/NAHS/Transition Information Workflow Project/Alt_HS_Attendance_Enrollment_Count",
       sheetName: "Alt_HS_Attendance_Enrollment_Count",
       rangeToClear: "A2:H",
     },
     {
       label:
-        "Campuses/NAHS/Transition Information Workflow Project/Alt_MS_Attendance Enrollment_Count",
+        "Campuses/NAHS/Transition Information Workflow Project/Alt_MS_Attendance_Enrollment_Count",
       sheetName: "Alt_MS_Attendance_Enrollment_Count",
       rangeToClear: "A2:H",
     },
