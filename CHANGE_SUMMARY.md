@@ -3,19 +3,20 @@
 **Date**: August 12, 2025  
 **Requested by**: User  
 **Implemented by**: GitHub Copilot Assistant  
-**Updated**: August 12, 2025 - Re-enabled Alt_MS_Attendance_Enrollment_Count
+**Updated**: August 12, 2025 - Re-enabled Alt_MS_Attendance_Enrollment_Count  
+**Updated**: August 12, 2025 - Re-enabled Alt_HS_Attendance_Enrollment_Count
 
 ## Summary
 
-Successfully disabled most data push features while preserving them for future re-activation. **Alt_MS_Attendance_Enrollment_Count was subsequently re-enabled on the same day.**
+Successfully disabled most data push features while preserving them for future re-activation. **Both attendance features were subsequently re-enabled on the same day.**
 
 ### Currently Active Features
-1. **Alt_MS_Attendance_Enrollment_Count** - Both email processing and manual data push to NAMS Criteria Sheet
+1. **Alt_HS_Attendance_Enrollment_Count** - Both email processing and manual data push to NAHS Criteria Sheet
+2. **Alt_MS_Attendance_Enrollment_Count** - Both email processing and manual data push to NAMS Criteria Sheet
 
 ### Disabled Features
 1. **Allergies** - Manual data push to NAMS Criteria Sheet
-2. **Entry_Withdrawal** - Manual data push to NAHS Criteria Sheet  
-3. **Alt_HS_Attendance_Enrollment_Count** - Manual data push to NAHS Criteria Sheet
+2. **Entry_Withdrawal** - Manual data push to NAHS Criteria Sheet
 
 ## Implementation Approach
 

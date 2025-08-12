@@ -115,14 +115,14 @@ The project integrates with several Google Spreadsheets:
 
 ### Manual Sheets (Data Push)
 **Currently Active:**
+- **Alt_HS_Attendance_Enrollment_Count**: Manually maintained HS attendance data
 - **Alt_MS_Attendance_Enrollment_Count**: Manually maintained MS attendance data
 
 **Temporarily Disabled (Available for Re-activation):**
-- **Alt_HS_Attendance_Enrollment_Count**: Manually maintained attendance data
 - **Entry_Withdrawal**: Manually maintained entry/withdrawal data
 - **Allergies**: Manually maintained allergy information
 
-> **Note**: Most manual features were disabled on 2025-08-12 per user request but remain available in the codebase (commented out) for potential re-activation later in the year. Alt_MS_Attendance_Enrollment_Count was re-enabled on 2025-08-12.
+> **Note**: Most manual features were disabled on 2025-08-12 per user request but remain available in the codebase (commented out) for potential re-activation later in the year. Alt_MS_Attendance_Enrollment_Count was re-enabled on 2025-08-12, and Alt_HS_Attendance_Enrollment_Count was re-enabled on 2025-08-12.
 
 ### Usage
 

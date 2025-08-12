@@ -1,6 +1,19 @@
 /**
  * @fileoverview NISD API Project Configuration
- * @description Central configuration file for the NISD API project.
+ * @description Central configuration file for the NIS      // DISABLED FEATURES - Commented out as features are disabled (2025-08-12)
+      // These features have been temporarily disabled but can be re-enabled by uncommenting
+      // and updating the documentation accordingly.
+      //
+      Alt_HS_Attendance_Enrollment_Count: {
+        range: "A2:H",
+        targets: [
+          {
+            spreadsheetId: "1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA",
+            sheetName: "Alt_HS_Attendance_Enrollment_Count",
+          },
+        ],
+      },
+      Alt_MS_Attendance_Enrollment_Count: {
  * Contains all constants, spreadsheet IDs, and configuration objects.
  * @author Alvaro Gomez, Academic Technology Coach
  * @contact alvaro.gomez@nisd.net
@@ -72,18 +85,16 @@ var CONFIG = {
     },
     {
       label:
+        "Campuses/NAHS/Transition Information Workflow Project/Alt_HS_Attendance_Enrollment_Count",
+      sheetName: "Alt_HS_Attendance_Enrollment_Count",
+      rangeToClear: "A2:H",
+    },
+    {
+      label:
         "Campuses/NAHS/Transition Information Workflow Project/Alt_MS_Attendance_Enrollment_Count",
       sheetName: "Alt_MS_Attendance_Enrollment_Count",
       rangeToClear: "A2:H",
     },
-    // DISABLED FEATURES - Commented out as per user request (2025-08-12)
-    // To re-enable: uncomment these sections and update documentation
-    // {
-    //   label:
-    //     "Campuses/NAHS/Transition Information Workflow Project/Alt_HS_Attendance_Enrollment_Count",
-    //   sheetName: "Alt_HS_Attendance_Enrollment_Count",
-    //   rangeToClear: "A2:H",
-    // },
   ],
 
   /**
@@ -201,10 +212,10 @@ var RANGES = {
   SCHEDULES_CLEAR: "A2:O", // Range refers to the Schedules sheet in the _DataLake spreadsheet
   CONTACT_INFO_CLEAR: "A2:N", // Range refers to the ContactInfo sheet in the _DataLake spreadsheet
   ENTRY_WITHDRAWAL_CLEAR: "A2:O", // Range refers to the Entry_Withdrawal2 sheet in the _DataLake spreadsheet
+  ALT_HS_ATTENDANCE: "A2:H", // Range refers to the Alt_HS_Attendance_Enrollment_Count sheet in the NAHS Criteria spreadsheet
   ALT_MS_ATTENDANCE: "A2:H", // Range refers to the Alt_MS_Attendance_Enrollment_Count sheet in the NAMS 2025-26 Criteria spreadsheet
   
   // DISABLED RANGES - Commented out as features are disabled (2025-08-12)
-  // ALT_HS_ATTENDANCE: "A2:H", // Range refers to the Alt_HS_Attendance_Enrollment_Count sheet in the NAHS Criteria spreadsheet
   // ENTRY_WITHDRAWAL_MANUAL: "A2:I", // Range refers to the Entry_Withdrawal sheet in the NAHS Criteria spreadsheet
   // ALLERGIES: "A2:E", // Range refers to the Allergies sheet in the NAMS 2025-26 Criteria spreadsheet
 };
