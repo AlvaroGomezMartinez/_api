@@ -43,7 +43,10 @@ function onOpen() {
  * @returns {void} Shows success dialog with links or error alert
  * 
  * @example
- * // Called via menu item, processes all configured source sheets:
+ * // Called via menu item, processes currently active configurations:
+ * // ACTIVE:
+ * // - Alt_MS_Attendance_Enrollment_Count → NAMS Criteria
+ * // DISABLED FEATURES (available for re-activation):
  * // - Alt_HS_Attendance_Enrollment_Count → NAHS Criteria
  * // - Entry_Withdrawal → NAHS Criteria  
  * // - Allergies → NAMS Criteria

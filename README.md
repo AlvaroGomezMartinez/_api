@@ -2,9 +2,11 @@
 ## Northside ISD<br>Department of Academic Technology
 
 ### Project Description
-This project supports a Google spreadsheet that simulates an API. The spreadsheet contains multiple sheets that feed information to separate projects. The spreadsheet is meant to make data gathering more time efficient. Three of the sheets have to be manually updated, but another three can be automated using report subscriptions from Cognos. The three subscribed reports are sent to Alvaro Gomez's gmail and are labeled.
+This project supports a Google spreadsheet that simulates an API. The spreadsheet contains multiple sheets that feed information to separate projects. The spreadsheet is meant to make data gathering more time efficient. Manual data push features have been temporarily disabled (2025-08-12) but can be re-activated as needed. Automated email processing features remain active.
 
 **The project has been completely refactored** to use a modern, modular architecture with improved error handling, logging, and maintainability.
+
+> **📋 Important**: Some features have been temporarily disabled. See [`DISABLED_FEATURES.md`](./DISABLED_FEATURES.md) for details and re-activation instructions.
 
 ### Architecture Overview
 
@@ -112,9 +114,15 @@ The project integrates with several Google Spreadsheets:
 - **Entry_Withdrawal2**: Updated from Cognos entry/withdrawal reports
 
 ### Manual Sheets (Data Push)
+**Currently Active:**
+- **Alt_MS_Attendance_Enrollment_Count**: Manually maintained MS attendance data
+
+**Temporarily Disabled (Available for Re-activation):**
 - **Alt_HS_Attendance_Enrollment_Count**: Manually maintained attendance data
 - **Entry_Withdrawal**: Manually maintained entry/withdrawal data
 - **Allergies**: Manually maintained allergy information
+
+> **Note**: Most manual features were disabled on 2025-08-12 per user request but remain available in the codebase (commented out) for potential re-activation later in the year. Alt_MS_Attendance_Enrollment_Count was re-enabled on 2025-08-12.
 
 ### Usage
 

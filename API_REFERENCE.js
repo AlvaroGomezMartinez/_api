@@ -104,7 +104,9 @@
  * @param {string} sheetName - Name of the source sheet
  * @returns {Object} Push result for the specified sheet
  * @example
- * var result = DataPusher_pushSingleSheet('Alt_HS_Attendance_Enrollment_Count');
+ * var result = DataPusher_pushSingleSheet('Alt_MS_Attendance_Enrollment_Count');
+ * // Note: Many manual data push features are currently disabled (2025-08-12)
+ * // See DISABLED_FEATURES.md for re-activation instructions
  */
 
 /**

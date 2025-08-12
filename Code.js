@@ -15,16 +15,18 @@
  * to make data gathering more time efficient.
  * 
  * ## Data Sources
- * **Manual Updates Required:**
- * - Alt_HS_Attendance_Enrollment_Count
- * - Entry_Withdrawal  
- * - Allergies
- * (These sheets lack report subscription options in Cognos)
+ * **Manual Updates Required (Partially Active):**
+ * - Alt_MS_Attendance_Enrollment_Count (Active)
+ * - Alt_HS_Attendance_Enrollment_Count (Disabled)
+ * - Entry_Withdrawal (Disabled)
+ * - Allergies (Disabled)
+ * (Most manual features were temporarily disabled on 2025-08-12 but remain available for re-activation)
  * 
  * **Automated Updates:**
  * - Schedules
  * - ContactInfo
  * - Entry_Withdrawal2
+ * - Alt_MS_Attendance_Enrollment_Count (Also has automated email processing)
  * (Updated via Cognos report subscriptions and email triggers)
  * 
  * ## Architecture
