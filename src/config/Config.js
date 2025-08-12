@@ -183,10 +183,6 @@ var CONFIG = {
    */
   SUCCESS_LINKS: [
     {
-      name: "NAHS Criteria Sheet",
-      url: "https://docs.google.com/spreadsheets/d/1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA/edit?gid=644557240#gid=644557240",
-    },
-    {
       name: "NAMS 2025-26 Criteria Sheet",
       url: "https://docs.google.com/spreadsheets/d/1q61g_br0jmqtAvyQhNYto1jezfzjttmsKAAG-pznXak/edit?gid=1453553637#gid=1453553637",
     },
