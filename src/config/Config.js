@@ -86,13 +86,13 @@ var CONFIG = {
     {
       label:
         "Campuses/NAHS/Transition Information Workflow Project/Alt_HS_Attendance_Enrollment_Count",
-      sheetName: "Alt_MS_Attendance_Enrollment_Count", // This is a workaround for Cognos running the data from HS & MS incorrectly. The HS report returns MS data and vice versa.
+      sheetName: "Alt_HS_Attendance_Enrollment_Count",
       rangeToClear: "A2:H",
     },
     {
       label:
         "Campuses/NAHS/Transition Information Workflow Project/Alt_MS_Attendance_Enrollment_Count",
-      sheetName: "Alt_HS_Attendance_Enrollment_Count", // See comment above.
+      sheetName: "Alt_MS_Attendance_Enrollment_Count",
       rangeToClear: "A2:H",
     },
   ],
