@@ -109,25 +109,22 @@ The project integrates with several Google Spreadsheets:
    - Target for allergies data
 
 ### Automated Sheets (Email Processing)
-- **Schedules**: Updated from Cognos schedule reports
-- **ContactInfo**: Updated from Cognos contact information reports  
-- **Entry_Withdrawal2**: Updated from Cognos entry/withdrawal reports
-
-### Manual Sheets (Data Push)
-**Currently Active:**
-- **Alt_HS_Attendance_Enrollment_Count**: Manually maintained HS attendance data
-- **Alt_MS_Attendance_Enrollment_Count**: Manually maintained MS attendance data
+- **Schedules**: Updated daily from the scheduled Cognos report called, "My My SCHD - CY Students List (2)"
+- **ContactInfo**: Updated daily from the scheduled Cognos report called, "My Student CY List - Student Email/Contact Info - Next Year Option (3)"  
+- **Entry_Withdrawal2**: Updated daily from the scheduled Cognos report called, "My Student CY List - Entry/Withdrawal in DateRange (2)"
+- **Alt_HS_Attendance_Enrollment_Count**: Updated daily from the scheduled Cognos report called, "My Alt HS Attendance/Enrollment Count (3)"
+- **Alt_MS_Attendance_Enrollment_Count**: Updated daily from the scheduled Cognos report called, "My Alt MS Attendance/Enrollment Count"
 
 **Temporarily Disabled (Available for Re-activation):**
 - **Entry_Withdrawal**: Manually maintained entry/withdrawal data
 - **Allergies**: Manually maintained allergy information
 
-> **Note**: Most manual features were disabled on 2025-08-12 per user request but remain available in the codebase (commented out) for potential re-activation later in the year. Alt_MS_Attendance_Enrollment_Count was re-enabled on 2025-08-12, and Alt_HS_Attendance_Enrollment_Count was re-enabled on 2025-08-12.
+> **Note**: Most manual features were disabled on 2025-08-12 per user request but remain available in the codebase (commented out) for potential re-activation later in the year.
 
 ### Usage
 
 #### For End Users
-1. **Automated Processing**: Runs automatically via triggers
+1. **Automated Processing**: Runs automatically via GAS triggers
 2. **Manual Data Push**: Use the "🚩 Push Data" menu in the spreadsheet
 3. **Status Checking**: Use menu items to check system status
 
