@@ -1,6 +1,19 @@
 /**
- * @fileoverview NISD API Project - Main Entry Points
- * @description Core functions for automated data processing and spreadsheet management
+ * @file Code.js
+ * @module MainEntryPoints
+ * @description Main entry points for automated data processing, spreadsheet management, and system operations in the NISD API Project.
+ *
+ * @typedef {Object} ProcessingResult
+ * @property {boolean} success - Whether the operation succeeded
+ * @property {string} sheetName - Name of the processed sheet
+ * @property {number} dataCount - Number of rows processed
+ * @property {string} [error] - Error message if operation failed
+ *
+ * @typedef {Object} StatusInfo
+ * @property {string} label - Gmail label or config name
+ * @property {boolean} processed - Whether processing was successful
+ * @property {string} [message] - Additional status message
+ *
  * @author Alvaro Gomez, Academic Technology Coach
  * @contact alvaro.gomez@nisd.net
  * @version 2.0.0
@@ -45,81 +58,38 @@
  */
 
 /**
- * @function updateSheetsFromEmail
- * @description Main function for automated email processing (called by triggers)
- * 
- * This function processes all configured email labels, extracts data from Excel
- * attachments, and updates corresponding spreadsheet sheets. It's designed to be
- * called by time-based triggers for automated daily updates.
- * 
- * @returns {Array<Object>} Processing results for each email configuration
- * @returns {Array<Object>} results[].success - Whether the operation succeeded
- * @returns {Array<Object>} results[].sheetName - Name of the processed sheet
- * @returns {Array<Object>} results[].dataCount - Number of rows processed
- * @returns {Array<Object>} results[].error - Error message if operation failed
- * 
+ * Main function for automated email processing (called by triggers).
+ * Processes all configured email labels, extracts data from Excel attachments, and updates corresponding spreadsheet sheets.
+ * Designed to be called by time-based triggers for automated daily updates.
+ *
+ * @function
+ * @returns {ProcessingResult[]} Processing results for each email configuration
+ * @throws {Error} If email processing fails critically
  * @example
- * // Called automatically by triggers, but can be run manually
  * var results = updateSheetsFromEmail();
  * console.log('Processed ' + results.length + ' configurations');
- * 
- * @since 1.0.0
- * @throws {Error} If email processing fails critically
  */
+
+
 function updateSheetsFromEmail() {
-  var timer = AppLogger_startTimer('updateSheetsFromEmail');
-  
-  try {
-    AppLogger_operationStart('updateSheetsFromEmail', {
-      triggerType: 'scheduled',
-      configCount: CONFIG.EMAIL_CONFIGS.length
-    });
-    
-    // Use the refactored EmailProcessor
-    var results = EmailProcessor_processAllConfigs();
-    
-    // Log summary for compatibility with existing monitoring
-    var successful = results.filter(function(r) { return r.success; }).length;
-    var failed = results.length - successful;
-    
-    if (failed === 0) {
-      Logger.log("All sheets updated successfully!");
-      AppLogger_operationSuccess('updateSheetsFromEmail', {
-        total: results.length,
-        successful: successful,
-        failed: failed
-      }, timer.stop());
-    } else {
-      Logger.log('Completed with ' + successful + ' successful and ' + failed + ' failed updates');
-      AppLogger_warn('updateSheetsFromEmail completed with some failures', {
-        total: results.length,
-        successful: successful,
-        failed: failed,
-        failures: results.filter(function(r) { return !r.success; })
-      });
-    }
-    
-    return results;
-    
-  } catch (error) {
-    timer.stop();
-    var errorMessage = ErrorHandler_handle(error, 'updateSheetsFromEmail');
-    Logger.log('Error: ' + errorMessage);
-    AppLogger_operationFailure('updateSheetsFromEmail', error);
-    throw error;
-  }
+  return withOperationLogging(
+    function updateSheetsFromEmailBusinessLogic() {
+      var results = EmailProcessor_processAllConfigs();
+      var successful = results.filter(function(r) { return r.success; }).length;
+      var failed = results.length - successful;
+      if (failed === 0) {
+        Logger.log("All sheets updated successfully!");
+      } else {
+        Logger.log('Completed with ' + successful + ' successful and ' + failed + ' failed updates');
+      }
+      return results;
+    },
+    'updateSheetsFromEmail',
+    { triggerType: 'scheduled', configCount: CONFIG.EMAIL_CONFIGS.length }
+  )();
 }
 
-/**
- * Legacy function for backward compatibility
- * Processes a single email configuration (now delegates to EmailProcessor)
- * 
- * @deprecated Use EmailProcessor.processSingleConfig() instead
- * @param {string} labelName - The Gmail label to search for
- * @param {string} spreadsheetId - The ID of the target Google Spreadsheet
- * @param {string} sheetName - The name of the sheet to update within the spreadsheet
- * @param {string} rangeToClear - The range to clear before inserting new data
- */
+// ...existing code for deprecated/legacy functions...
 // function processEmailToSheet(labelName, spreadsheetId, sheetName, rangeToClear) {
 //   try {
 //     AppLogger_warn('Using deprecated processEmailToSheet function', {
@@ -174,9 +144,10 @@ function updateSheetsFromEmail() {
 // ================================
 
 /**
- * Processes emails for a specific Gmail label (for testing/debugging)
- * @param {string} labelName - The Gmail label to process
- * @returns {Object} Processing result
+ * Processes emails for a specific Gmail label (for testing/debugging).
+ * @function
+ * @param {string} labelName - The Gmail label to process.
+ * @returns {ProcessingResult} Processing result for the label.
  */
 function processSpecificLabel(labelName) {
   try {
@@ -188,8 +159,9 @@ function processSpecificLabel(labelName) {
 }
 
 /**
- * Gets the status of all email processing configurations
- * @returns {Object} Status information
+ * Gets the status of all email processing configurations.
+ * @function
+ * @returns {StatusInfo|Object} Status information for all configurations.
  */
 function getEmailProcessingStatus() {
   try {
@@ -201,8 +173,9 @@ function getEmailProcessingStatus() {
 }
 
 /**
- * Runs a dry run of email processing to validate configurations
- * @returns {Object} Validation results
+ * Runs a dry run of email processing to validate configurations.
+ * @function
+ * @returns {Object} Validation results.
  */
 function runEmailProcessingDryRun() {
   try {
@@ -214,34 +187,41 @@ function runEmailProcessingDryRun() {
 }
 
 /**
- * Pushes data manually from source sheets to target spreadsheets
- * @returns {Array<Object>} Push results
+ * Pushes data manually from source sheets to target spreadsheets.
+ * @function
+ * @returns {ProcessingResult[]} Push results for each data configuration.
  */
+
+
 function pushDataToSheets() {
-  try {
-    return DataPusher_pushAllData();
-  } catch (error) {
-    var errorMessage = ErrorHandler_handle(error, 'pushDataToSheets');
-    throw error;
-  }
+  return withOperationLogging(
+    function pushDataToSheetsBusinessLogic() {
+      return DataPusher_pushAllData();
+    },
+    'pushDataToSheets'
+  )();
 }
 
 /**
- * Gets the status of all push data configurations
- * @returns {Object} Status information
+ * Gets the status of all push data configurations.
+ * @function
+ * @returns {StatusInfo|Object} Status information for all push data configurations.
  */
+
+
 function getPushDataStatus() {
-  try {
-    return DataPusher_getPushDataStatus();
-  } catch (error) {
-    var errorMessage = ErrorHandler_handle(error, 'getPushDataStatus');
-    throw error;
-  }
+  return withOperationLogging(
+    function getPushDataStatusBusinessLogic() {
+      return DataPusher_getPushDataStatus();
+    },
+    'getPushDataStatus'
+  )();
 }
 
 /**
- * Runs comprehensive system tests
- * @returns {Object} Test results
+ * Runs comprehensive system tests.
+ * @function
+ * @returns {Object} Test results.
  */
 function runSystemTests() {
   try {
@@ -253,8 +233,9 @@ function runSystemTests() {
 }
 
 /**
- * Gets a summary of the current configuration
- * @returns {Object} Configuration summary
+ * Gets a summary of the current configuration.
+ * @function
+ * @returns {Object} Configuration summary.
  */
 function getConfigurationSummary() {
   try {

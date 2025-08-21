@@ -2,15 +2,30 @@
  * Input validation utilities for the NISD API project.
  * Provides comprehensive validation functions for various data types and formats.
  * Compatible with Google Apps Script V8 runtime.
- * 
+ *
+ * @file Input validation utilities for NISD API project.
  * @author Alvaro Gomez, Academic Technology Coach
  */
 
 /**
- * Validates a Google Spreadsheet ID
- * @param {string} id - The spreadsheet ID to validate
- * @param {string} context - Context for error messages
- * @throws {Error} If the spreadsheet ID is invalid
+ * @typedef {Object} EmailConfig
+ * @property {string} label - Gmail label to process.
+ * @property {string} sheetName - Target sheet name.
+ * @property {string} rangeToClear - Range to clear in the sheet.
+ */
+
+/**
+ * @typedef {Object} PushDataConfig
+ * @property {string} range - Range to push data to.
+ * @property {Array<{spreadsheetId: string, sheetName: string}>} targets - Target spreadsheets and sheets.
+ */
+
+/**
+ * Validates a Google Spreadsheet ID.
+ * @param {string} id - The spreadsheet ID to validate.
+ * @param {string} [context] - Context for error messages.
+ * @throws {Error} If the spreadsheet ID is invalid.
+ * @returns {void}
  */
 function Validators_validateSpreadsheetId(id, context) {
   context = context || 'Spreadsheet ID';
@@ -35,10 +50,11 @@ function Validators_validateSpreadsheetId(id, context) {
 }
 
 /**
- * Validates a sheet name
- * @param {string} name - The sheet name to validate
- * @param {string} context - Context for error messages
- * @throws {Error} If the sheet name is invalid
+ * Validates a sheet name.
+ * @param {string} name - The sheet name to validate.
+ * @param {string} [context] - Context for error messages.
+ * @throws {Error} If the sheet name is invalid.
+ * @returns {void}
  */
 function Validators_validateSheetName(name, context) {
   context = context || 'Sheet name';
@@ -53,10 +69,11 @@ function Validators_validateSheetName(name, context) {
 }
 
 /**
- * Validates an email configuration object
- * @param {Object} config - The email configuration to validate
- * @param {string} context - Context for error messages
- * @throws {Error} If the configuration is invalid
+ * Validates an email configuration object.
+ * @param {EmailConfig} config - The email configuration to validate.
+ * @param {string} [context] - Context for error messages.
+ * @throws {Error} If the configuration is invalid.
+ * @returns {void}
  */
 function Validators_validateEmailConfig(config, context) {
   context = context || 'Email configuration';
@@ -79,10 +96,11 @@ function Validators_validateEmailConfig(config, context) {
 }
 
 /**
- * Validates a Gmail label name
- * @param {string} label - The Gmail label to validate
- * @param {string} context - Context for error messages
- * @throws {Error} If the label is invalid
+ * Validates a Gmail label name.
+ * @param {string} label - The Gmail label to validate.
+ * @param {string} [context] - Context for error messages.
+ * @throws {Error} If the label is invalid.
+ * @returns {void}
  */
 function Validators_validateGmailLabel(label, context) {
   context = context || 'Gmail label';
@@ -97,10 +115,11 @@ function Validators_validateGmailLabel(label, context) {
 }
 
 /**
- * Validates a spreadsheet range
- * @param {string} range - The range to validate (e.g., "A2:O")
- * @param {string} context - Context for error messages
- * @throws {Error} If the range is invalid
+ * Validates a spreadsheet range (e.g., "A2:O").
+ * @param {string} range - The range to validate.
+ * @param {string} [context] - Context for error messages.
+ * @throws {Error} If the range is invalid.
+ * @returns {void}
  */
 function Validators_validateRange(range, context) {
   context = context || 'Range';
@@ -121,10 +140,11 @@ function Validators_validateRange(range, context) {
 }
 
 /**
- * Validates a data array for spreadsheet operations
- * @param {Array} data - The data array to validate
- * @param {string} context - Context for error messages
- * @throws {Error} If the data is invalid
+ * Validates a data array for spreadsheet operations.
+ * @param {Array<Array<any>>} data - The data array to validate.
+ * @param {string} [context] - Context for error messages.
+ * @throws {Error} If the data is invalid.
+ * @returns {void}
  */
 function Validators_validateDataArray(data, context) {
   context = context || 'Data array';
@@ -164,10 +184,11 @@ function Validators_validateDataArray(data, context) {
 }
 
 /**
- * Validates a push data configuration
- * @param {Object} config - The push data configuration to validate
- * @param {string} context - Context for error messages
- * @throws {Error} If the configuration is invalid
+ * Validates a push data configuration.
+ * @param {PushDataConfig} config - The push data configuration to validate.
+ * @param {string} [context] - Context for error messages.
+ * @throws {Error} If the configuration is invalid.
+ * @returns {void}
  */
 function Validators_validatePushDataConfig(config, context) {
   context = context || 'Push data configuration';
@@ -200,10 +221,11 @@ function Validators_validatePushDataConfig(config, context) {
 }
 
 /**
- * Validates an email attachment
- * @param {GoogleAppsScript.Gmail.GmailAttachment} attachment - The attachment to validate
- * @param {string} context - Context for error messages
- * @throws {Error} If the attachment is invalid
+ * Validates an email attachment.
+ * @param {GoogleAppsScript.Gmail.GmailAttachment} attachment - The attachment to validate.
+ * @param {string} [context] - Context for error messages.
+ * @throws {Error} If the attachment is invalid.
+ * @returns {void}
  */
 function Validators_validateEmailAttachment(attachment, context) {
   context = context || 'Email attachment';
@@ -231,11 +253,12 @@ function Validators_validateEmailAttachment(attachment, context) {
 }
 
 /**
- * Validates a Google Apps Script sheet object
- * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet - The sheet to validate
- * @param {string} expectedName - Expected sheet name
- * @param {string} context - Context for error messages
- * @throws {Error} If the sheet is invalid
+ * Validates a Google Apps Script sheet object.
+ * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet - The sheet to validate.
+ * @param {string} [expectedName] - Expected sheet name.
+ * @param {string} [context] - Context for error messages.
+ * @throws {Error} If the sheet is invalid.
+ * @returns {void}
  */
 function Validators_validateSheet(sheet, expectedName, context) {
   expectedName = expectedName || null;
@@ -266,10 +289,11 @@ function Validators_validateSheet(sheet, expectedName, context) {
 }
 
 /**
- * Validates operation results for batch processing
- * @param {Array} results - Array of operation results
- * @param {string} context - Context for error messages
- * @throws {Error} If results format is invalid
+ * Validates operation results for batch processing.
+ * @param {Array<Object>} results - Array of operation results.
+ * @param {string} [context] - Context for error messages.
+ * @throws {Error} If results format is invalid.
+ * @returns {void}
  */
 function Validators_validateBatchResults(results, context) {
   context = context || 'Batch results';
@@ -301,7 +325,8 @@ function Validators_validateBatchResults(results, context) {
 }
 
 /**
- * Validators object for backward compatibility and easier access
+ * Validators object for backward compatibility and easier access.
+ * @namespace Validators
  */
 var Validators = {
   validateSpreadsheetId: Validators_validateSpreadsheetId,

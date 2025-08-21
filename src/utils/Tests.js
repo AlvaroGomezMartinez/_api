@@ -2,13 +2,15 @@
  * Test suite for the NISD API project.
  * Provides comprehensive testing functions for all modules.
  * Compatible with Google Apps Script V8 runtime.
- * 
+ *
+ * @file Test suite for NISD API project.
  * @author Alvaro Gomez, Academic Technology Coach
  */
 
 /**
- * Main test runner function
- * Runs all available tests and provides a summary
+ * Main test runner function.
+ * Runs all available tests and provides a summary.
+ * @returns {Object} Test results summary object.
  */
 function runAllTests() {
   try {
@@ -69,7 +71,8 @@ function runAllTests() {
 }
 
 /**
- * Tests configuration validation
+ * Tests configuration validation.
+ * @returns {Object} Test result object with status and errors/messages.
  */
 function testConfigValidation() {
   try {
@@ -124,7 +127,8 @@ function testConfigValidation() {
 }
 
 /**
- * Tests the Validators utility class
+ * Tests the Validators utility class.
+ * @returns {Object} Test result object with status, tests, and summary.
  */
 function testValidators() {
   try {
@@ -184,7 +188,8 @@ function testValidators() {
 }
 
 /**
- * Tests DateUtils functionality
+ * Tests DateUtils functionality.
+ * @returns {Object} Test result object with status, tests, and summary.
  */
 function testDateUtils() {
   try {
@@ -240,7 +245,8 @@ function testDateUtils() {
 }
 
 /**
- * Tests ErrorHandler functionality
+ * Tests ErrorHandler functionality.
+ * @returns {Object} Test result object with status, tests, and summary.
  */
 function testErrorHandler() {
   try {
@@ -288,7 +294,8 @@ function testErrorHandler() {
 }
 
 /**
- * Tests Logger functionality
+ * Tests Logger functionality.
+ * @returns {Object} Test result object with status, tests, and summary.
  */
 function testLogger() {
   try {
@@ -337,7 +344,8 @@ function testLogger() {
 }
 
 /**
- * Tests Gmail connectivity (read-only test)
+ * Tests Gmail connectivity (read-only test).
+ * @returns {Object} Test result object with status, labelCount, missingLabels, and message.
  */
 function testGmailConnectivity() {
   try {
@@ -368,7 +376,8 @@ function testGmailConnectivity() {
 }
 
 /**
- * Tests spreadsheet connectivity (read-only test)
+ * Tests spreadsheet connectivity (read-only test).
+ * @returns {Object} Test result object with status, spreadsheetId, sheetCount, and message.
  */
 function testSpreadsheetConnectivity() {
   try {
@@ -394,8 +403,8 @@ function testSpreadsheetConnectivity() {
 }
 
 /**
- * Utility function to run system tests (used by Menu functions)
- * @returns {Object} Test results object
+ * Utility function to run system tests (used by Menu functions).
+ * @returns {Object} Test results object with overall status, tests, and summary.
  */
 function Utils_runSystemTests() {
   try {

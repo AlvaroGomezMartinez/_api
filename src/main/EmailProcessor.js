@@ -1,26 +1,25 @@
 /**
- * @fileoverview Email Processor for NISD API Project
- * @description Email processor for the NISD API project.
+ * Email Processor for NISD API Project
  * Handles automated data processing from Gmail attachments to Google Sheets.
  * Compatible with Google Apps Script V8 runtime.
+ *
+ * @file Email processor for NISD API project.
  * @author Alvaro Gomez, Academic Technology Coach
  * @version 2.0.0
  * @since 2025-08-04
  */
 
 /**
- * @function EmailProcessor_processAllConfigs
- * @description Processes all configured email labels and updates corresponding sheets.
+ * Processes all configured email labels and updates corresponding sheets.
  * This is the main entry point for automated email processing.
- * @param {boolean} [dryRun=false] - If true, performs validation without making changes
- * @returns {Array<Object>} Array of processing results for each configuration
+ * @function EmailProcessor_processAllConfigs
+ * @returns {Array<Object>} Array of processing results for each configuration.
  * @example
  * // Normal processing
  * var results = EmailProcessor_processAllConfigs();
  * results.forEach(function(result) {
  *   console.log(result.sheetName + ': ' + (result.success ? 'SUCCESS' : 'FAILED'));
  * });
- * 
  * // Dry run for testing
  * var testResults = EmailProcessor_processAllConfigs(true);
  */
@@ -96,11 +95,11 @@ function EmailProcessor_processAllConfigs() {
 }
 
 /**
- * Processes a single email configuration
- * @param {Object} config - The email configuration object
- * @param {string} context - Context for error messages
- * @returns {Object} Processing result with metadata
- * @throws {Error} If processing fails
+ * Processes a single email configuration.
+ * @param {Object} config - The email configuration object.
+ * @param {string} [context] - Context for error messages.
+ * @returns {Object} Processing result with metadata.
+ * @throws {Error} If processing fails.
  */
 function EmailProcessor_processSingleConfig(config, context) {
   context = context || 'Single config processing';
@@ -162,9 +161,10 @@ function EmailProcessor_processSingleConfig(config, context) {
 }
 
 /**
- * Validates all email configurations before processing
+ * Validates all email configurations before processing.
  * @private
- * @throws {Error} If any configuration is invalid
+ * @throws {Error} If any configuration is invalid.
+ * @returns {void}
  */
 function EmailProcessor__validateAllConfigurations() {
   AppLogger_info('Validating all email configurations');
@@ -221,8 +221,8 @@ function EmailProcessor__validateAllConfigurations() {
 }
 
 /**
- * Gets processing status for all configurations
- * @returns {Object} Status information for each configuration
+ * Gets processing status for all configurations.
+ * @returns {Object} Status information for each configuration.
  */
 function EmailProcessor_getProcessingStatus() {
   try {
@@ -264,10 +264,10 @@ function EmailProcessor_getProcessingStatus() {
 }
 
 /**
- * Processes emails by specific label (for individual testing)
- * @param {string} labelName - The Gmail label to process
- * @returns {Object} Processing result
- * @throws {Error} If processing fails
+ * Processes emails by specific label (for individual testing).
+ * @param {string} labelName - The Gmail label to process.
+ * @returns {Object} Processing result.
+ * @throws {Error} If processing fails.
  */
 function EmailProcessor_processSpecificLabel(labelName) {
   try {
@@ -305,8 +305,8 @@ function EmailProcessor_processSpecificLabel(labelName) {
 }
 
 /**
- * Dry run processing to validate configurations without making changes
- * @returns {Object} Validation results
+ * Dry run processing to validate configurations without making changes.
+ * @returns {Object} Validation results.
  */
 function EmailProcessor_dryRun() {
   try {
@@ -379,7 +379,8 @@ function EmailProcessor_dryRun() {
 }
 
 /**
- * EmailProcessor object for backward compatibility and easier access
+ * EmailProcessor object for backward compatibility and easier access.
+ * @namespace EmailProcessor
  */
 var EmailProcessor = {
   processAllConfigs: EmailProcessor_processAllConfigs,

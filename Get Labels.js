@@ -7,11 +7,12 @@
  */
 
 /**
- * Legacy function for getting Gmail labels
- * This is a utility formula that was used to get the list of Gmail labels.
- * It was only run to get the label names for the main function.
- * 
- * @deprecated Use Utils.listGmailLabels() instead
+ * Legacy function for getting Gmail labels.
+ * Utility formula previously used to get the list of Gmail labels for the main function.
+ *
+ * @deprecated Use Utils.listGmailLabels() instead.
+ * @function
+ * @returns {string[]} Array of Gmail label names.
  */
 function listGmailLabels() {
   try {

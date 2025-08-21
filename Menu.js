@@ -1,22 +1,27 @@
 /**
- * @fileoverview Menu and UI functions for the NISD API project
- * @description Provides Google Sheets menu integration and user interface functions
+ * @file Menu.js
+ * @module Menu
+ * @description Provides Google Sheets menu integration and user interface functions for the NISD API project.
+ *
+ * @typedef {Object} OperationResult
+ * @property {boolean} success - Whether the operation succeeded
+ * @property {string} [sourceSheet] - Name of the source sheet
+ * @property {string} [error] - Error message if operation failed
+ *
  * @author Alvaro Gomez, Academic Technology Coach
  * @version 2.0.0
  * @since 2025-08-04
  */
 
 /**
- * @function onOpen
- * @description Creates the custom menu when the spreadsheet is opened
- * 
- * This function is automatically called by Google Sheets when the spreadsheet
- * is opened. It creates a custom menu with data processing and testing options.
- * 
+ * Creates the custom menu when the spreadsheet is opened.
+ * This function is automatically called by Google Sheets when the spreadsheet is opened.
+ * It creates a custom menu with data processing and testing options.
+ *
+ * @function
  * @memberof Google.Apps.Script.Events
  * @example
  * // Automatically called by Google Sheets, no manual invocation needed
- * 
  * @since 1.0.0
  */
 function onOpen() {
@@ -32,16 +37,11 @@ function onOpen() {
 }
 
 /**
- * @function pushDataToSheets
- * @description Pushes data from source sheets to target spreadsheets
- * 
- * This function is called when the user selects 'Push Data to Sheets' from the menu.
- * It reads data from configured source sheets in the current spreadsheet and pushes
- * them to specific target sheets in external spreadsheets (NAHS Criteria Sheet and 
- * NAMS 2024-25 Criteria Sheet).
- * 
- * @returns {void} Shows success dialog with links or error alert
- * 
+ * Pushes data from source sheets to target spreadsheets (menu action).
+ * Reads data from configured source sheets and pushes them to target sheets in external spreadsheets.
+ *
+ * @function
+ * @returns {void}
  * @example
  * // Called via menu item, processes currently active configurations:
  * // ACTIVE:
@@ -50,7 +50,6 @@ function onOpen() {
  * // DISABLED FEATURES (available for re-activation):
  * // - Entry_Withdrawal → NAHS Criteria  
  * // - Allergies → NAMS Criteria
- * 
  * @since 1.0.0
  * @see {@link DataPusher_pushAllData} for the underlying implementation
  */
@@ -99,6 +98,8 @@ function pushDataToSheets() {
 /**
  * Shows a custom success dialog with hyperlinks.
  * Now uses configuration-driven links.
+ * @function
+ * @returns {void}
  */
 function showSuccessDialog() {
   try {
@@ -119,8 +120,10 @@ function showSuccessDialog() {
 }
 
 /**
- * Shows an error dialog with details about failed operations
- * @param {Array<Object>} results - Array of operation results
+ * Shows an error dialog with details about failed operations.
+ * @function
+ * @param {OperationResult[]} results - Array of operation results.
+ * @returns {void}
  */
 function showErrorDialog(results) {
   try {
@@ -157,7 +160,9 @@ function showErrorDialog(results) {
 }
 
 /**
- * Shows the current push data status
+ * Shows the current push data status.
+ * @function
+ * @returns {void}
  */
 function showPushDataStatus() {
   try {
@@ -195,7 +200,9 @@ function showPushDataStatus() {
 }
 
 /**
- * Shows the current email processing status
+ * Shows the current email processing status.
+ * @function
+ * @returns {void}
  */
 function showEmailProcessingStatus() {
   try {
@@ -230,7 +237,9 @@ function showEmailProcessingStatus() {
 }
 
 /**
- * Shows system test results
+ * Shows system test results.
+ * @function
+ * @returns {void}
  */
 function showSystemTestResults() {
   try {
@@ -270,13 +279,13 @@ function showSystemTestResults() {
 }
 
 /**
- * Legacy function for backward compatibility
+ * Legacy function for backward compatibility.
  * Updates the target sheet with new data, clearing old data and appending a timestamp note in cell A1.
- * 
+ *
  * @deprecated Use SheetService.updateSheet() instead
  * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet - The target sheet to update.
  * @param {any[][]} data - The data to write to the target sheet. Each sub-array represents a row.
- * @throws Will throw an error if the target sheet is not found or if other issues occur during the update process.
+ * @throws {Error} If the target sheet is not found or if other issues occur during the update process.
  */
 function updateTargetSheet(sheet, data) {
   try {

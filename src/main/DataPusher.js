@@ -1,18 +1,19 @@
 /**
- * @fileoverview Data Pusher for NISD API Project
- * @description Data pusher for the NISD API project.
+ * Data Pusher for NISD API Project
  * Handles manual data push operations from the main spreadsheet to target spreadsheets.
  * Compatible with Google Apps Script V8 runtime.
+ *
+ * @file Data pusher for NISD API project.
  * @author Alvaro Gomez, Academic Technology Coach
  * @version 2.0.0
  * @since 2025-08-04
  */
 
 /**
- * @function DataPusher_pushAllData
- * @description Pushes data from source sheets to all configured target spreadsheets.
+ * Pushes data from source sheets to all configured target spreadsheets.
  * This is the main entry point for manual data push operations.
- * @returns {Array<Object>} Array of push results for each source sheet
+ * @function DataPusher_pushAllData
+ * @returns {Array<Object>} Array of push results for each source sheet.
  * @example
  * var results = DataPusher_pushAllData();
  * var successful = results.filter(function(r) { return r.success; }).length;
@@ -82,12 +83,12 @@ function DataPusher_pushAllData() {
 }
 
 /**
- * Pushes data from a single source sheet to its configured targets
- * @param {string} sourceSheetName - The name of the source sheet
- * @param {Object} config - The push configuration for this sheet
- * @param {string} context - Context for error messages
- * @returns {Object} Push result with metadata
- * @throws {Error} If push operation fails
+ * Pushes data from a single source sheet to its configured targets.
+ * @param {string} sourceSheetName - The name of the source sheet.
+ * @param {Object} config - The push configuration for this sheet.
+ * @param {string} [context] - Context for error messages.
+ * @returns {Object} Push result with metadata.
+ * @throws {Error} If push operation fails.
  */
 function DataPusher_pushSingleSheet(sourceSheetName, config, context) {
   context = context || 'Single sheet push';
@@ -181,12 +182,12 @@ function DataPusher_pushSingleSheet(sourceSheetName, config, context) {
 }
 
 /**
- * Pushes data to a specific target spreadsheet and sheet
+ * Pushes data to a specific target spreadsheet and sheet.
  * @private
- * @param {Array<Array<any>>} data - The data to push
- * @param {Object} target - The target configuration
- * @param {string} context - Context for error messages
- * @returns {Object} Push result for this target
+ * @param {Array<Array<any>>} data - The data to push.
+ * @param {Object} target - The target configuration.
+ * @param {string} context - Context for error messages.
+ * @returns {Object} Push result for this target.
  */
 function DataPusher__pushToTarget(data, target, context) {
   try {
@@ -251,9 +252,10 @@ function DataPusher__pushToTarget(data, target, context) {
 }
 
 /**
- * Validates all push data configurations
+ * Validates all push data configurations.
  * @private
- * @throws {Error} If any configuration is invalid
+ * @throws {Error} If any configuration is invalid.
+ * @returns {void}
  */
 function DataPusher__validatePushConfigurations() {
   AppLogger_info('Validating push data configurations');
@@ -331,8 +333,8 @@ function DataPusher__validatePushConfigurations() {
 }
 
 /**
- * Gets push data status for all configured sheets
- * @returns {Object} Status information for push data configurations
+ * Gets push data status for all configured sheets.
+ * @returns {Object} Status information for push data configurations.
  */
 function DataPusher_getPushDataStatus() {
   try {
@@ -407,10 +409,10 @@ function DataPusher_getPushDataStatus() {
 }
 
 /**
- * Pushes data from a specific source sheet (for individual testing)
- * @param {string} sourceSheetName - The name of the source sheet to push
- * @returns {Object} Push result
- * @throws {Error} If push operation fails
+ * Pushes data from a specific source sheet (for individual testing).
+ * @param {string} sourceSheetName - The name of the source sheet to push.
+ * @returns {Object} Push result.
+ * @throws {Error} If push operation fails.
  */
 function DataPusher_pushSpecificSheet(sourceSheetName) {
   try {
@@ -441,8 +443,8 @@ function DataPusher_pushSpecificSheet(sourceSheetName) {
 }
 
 /**
- * Creates the success dialog HTML content
- * @returns {string} HTML content for the success dialog
+ * Creates the success dialog HTML content.
+ * @returns {string} HTML content for the success dialog.
  */
 function DataPusher_createSuccessDialogContent() {
   var links = CONFIG.SUCCESS_LINKS.map(function(link) {
@@ -456,7 +458,8 @@ function DataPusher_createSuccessDialogContent() {
 }
 
 /**
- * DataPusher object for backward compatibility and easier access
+ * DataPusher object for backward compatibility and easier access.
+ * @namespace DataPusher
  */
 var DataPusher = {
   pushAllData: DataPusher_pushAllData,

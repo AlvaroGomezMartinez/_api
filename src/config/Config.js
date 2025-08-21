@@ -1,20 +1,10 @@
 /**
- * @fileoverview NISD API Project Configuration
- * @description Central configuration file for the NIS      // DISABLED FEATURES - Commented out as features are disabled (2025-08-12)
-      // These features have been temporarily disabled but can be re-enabled by uncommenting
-      // and updating the documentation accordingly.
-      //
-      Alt_HS_Attendance_Enrollment_Count: {
-        range: "A2:H",
-        targets: [
-          {
-            spreadsheetId: "1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA",
-            sheetName: "Alt_HS_Attendance_Enrollment_Count",
-          },
-        ],
-      },
-      Alt_MS_Attendance_Enrollment_Count: {
+ * NISD API Project Configuration
+ * Central configuration file for the NISD API project.
  * Contains all constants, spreadsheet IDs, and configuration objects.
+ * Compatible with Google Apps Script V8 runtime.
+ *
+ * @file Project configuration for NISD API project.
  * @author Alvaro Gomez, Academic Technology Coach
  * @contact alvaro.gomez@nisd.net
  * @version 2.0.0
@@ -22,15 +12,13 @@
  */
 
 /**
+ * Main configuration object containing all project settings.
  * @namespace CONFIG
- * @description Main configuration object containing all project settings
  * @example
  * // Access a spreadsheet ID
  * var mainSpreadsheetId = CONFIG.SPREADSHEETS.MAIN;
- * 
  * // Access email configurations
  * var emailConfigs = CONFIG.EMAIL_CONFIGS;
- * 
  * // Access push data configurations
  * var pushConfigs = CONFIG.PUSH_DATA_CONFIGS;
  */

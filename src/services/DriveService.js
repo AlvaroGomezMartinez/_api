@@ -2,16 +2,17 @@
  * Google Drive service for handling file operations in the NISD API project.
  * Provides methods for processing Excel files and managing temporary files.
  * Compatible with Google Apps Script V8 runtime.
- * 
+ *
+ * @file Drive service for NISD API project.
  * @author Alvaro Gomez, Academic Technology Coach
  */
 
 /**
- * Processes an Excel file attachment and extracts its data as a 2D array
- * @param {GoogleAppsScript.Base.Blob} fileBlob - The Excel file attachment as a Blob
- * @param {string} context - Context for error messages
- * @returns {Array<Array<string>>} The extracted data from the Excel file, excluding the header row
- * @throws {Error} If the file cannot be processed or converted
+ * Processes an Excel file attachment and extracts its data as a 2D array.
+ * @param {GoogleAppsScript.Base.Blob} fileBlob - The Excel file attachment as a Blob.
+ * @param {string} [context] - Context for error messages.
+ * @returns {Array<Array<string>>} The extracted data from the Excel file, excluding the header row.
+ * @throws {Error} If the file cannot be processed or converted.
  */
 function DriveService_processExcelData(fileBlob, context) {
   context = context || 'Excel data processing';
@@ -78,11 +79,11 @@ function DriveService_processExcelData(fileBlob, context) {
 }
 
 /**
- * Creates a temporary file in Google Drive
+ * Creates a temporary file in Google Drive.
  * @private
- * @param {GoogleAppsScript.Base.Blob} fileBlob - The file blob to save
- * @returns {GoogleAppsScript.Drive.File} The created temporary file
- * @throws {Error} If file creation fails
+ * @param {GoogleAppsScript.Base.Blob} fileBlob - The file blob to save.
+ * @returns {GoogleAppsScript.Drive.File} The created temporary file.
+ * @throws {Error} If file creation fails.
  */
 function DriveService__createTempFile(fileBlob) {
   try {
@@ -103,11 +104,11 @@ function DriveService__createTempFile(fileBlob) {
 }
 
 /**
- * Converts a file to Google Sheets format using the Drive API
+ * Converts a file to Google Sheets format using the Drive API.
  * @private
- * @param {GoogleAppsScript.Drive.File} file - The file to convert
- * @returns {Object} The converted file metadata
- * @throws {Error} If conversion fails
+ * @param {GoogleAppsScript.Drive.File} file - The file to convert.
+ * @returns {Object} The converted file metadata.
+ * @throws {Error} If conversion fails.
  */
 function DriveService__convertToGoogleSheets(file) {
   try {
@@ -141,11 +142,11 @@ function DriveService__convertToGoogleSheets(file) {
 }
 
 /**
- * Extracts data from a Google Sheets file
+ * Extracts data from a Google Sheets file.
  * @private
- * @param {string} spreadsheetId - The ID of the Google Sheets file
- * @returns {Array<Array<string>>} The extracted data without headers
- * @throws {Error} If data extraction fails
+ * @param {string} spreadsheetId - The ID of the Google Sheets file.
+ * @returns {Array<Array<string>>} The extracted data without headers.
+ * @throws {Error} If data extraction fails.
  */
 function DriveService__extractDataFromSheet(spreadsheetId) {
   try {
@@ -191,9 +192,10 @@ function DriveService__extractDataFromSheet(spreadsheetId) {
 }
 
 /**
- * Cleans up temporary files from Google Drive
+ * Cleans up temporary files from Google Drive.
  * @private
- * @param {Array} files - Array of file objects to clean up (can include nulls)
+ * @param {Array} files - Array of file objects to clean up (can include nulls).
+ * @returns {void}
  */
 function DriveService__cleanupTempFiles(files) {
   if (!files || files.length === 0) {
@@ -241,10 +243,10 @@ function DriveService__cleanupTempFiles(files) {
 }
 
 /**
- * Gets file metadata from Google Drive
- * @param {string} fileId - The ID of the file
- * @returns {Object} File metadata
- * @throws {Error} If file is not found or not accessible
+ * Gets file metadata from Google Drive.
+ * @param {string} fileId - The ID of the file.
+ * @returns {Object} File metadata.
+ * @throws {Error} If file is not found or not accessible.
  */
 function DriveService_getFileMetadata(fileId) {
   try {
@@ -271,10 +273,11 @@ function DriveService_getFileMetadata(fileId) {
 }
 
 /**
- * Validates that a file exists and is accessible
- * @param {string} fileId - The ID of the file to validate
- * @param {string} context - Context for error messages
- * @throws {Error} If file is not found or not accessible
+ * Validates that a file exists and is accessible.
+ * @param {string} fileId - The ID of the file to validate.
+ * @param {string} [context] - Context for error messages.
+ * @throws {Error} If file is not found or not accessible.
+ * @returns {void}
  */
 function DriveService_validateFileExists(fileId, context) {
   context = context || 'File validation';
@@ -291,7 +294,8 @@ function DriveService_validateFileExists(fileId, context) {
 }
 
 /**
- * DriveService object for backward compatibility and easier access
+ * DriveService object for backward compatibility and easier access.
+ * @namespace DriveService
  */
 var DriveService = {
   processExcelData: DriveService_processExcelData,

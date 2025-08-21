@@ -1,5 +1,5 @@
 /**
- * @fileoverview Logger Utility for NISD API Project
+ * @file Logger Utility for NISD API Project
  * @description Structured logging utility for the NISD API project.
  * Provides consistent logging with different levels and structured output.
  * Compatible with Google Apps Script V8 runtime.
@@ -9,10 +9,31 @@
  */
 
 /**
+ * @typedef {Object} LoggerContext
+ * @property {string} [operation] - Name of the operation.
+ * @property {Object} [params] - Operation parameters.
+ * @property {Object} [result] - Operation result.
+ * @property {number|string} [duration] - Duration in ms or as string.
+ * @property {string} [metric] - Metric name.
+ * @property {number} [value] - Metric value.
+ * @property {string} [unit] - Unit of measurement.
+ * @property {number} [recordCount] - Number of records processed.
+ * @property {Object} [metadata] - Additional metadata.
+ */
+
+/**
+ * @typedef {Object} BatchResult
+ * @property {boolean} success - Whether the operation was successful.
+ * @property {Object} [error] - Error object if failed.
+ * @property {any} [item] - The item processed.
+ */
+
+/**
+ * Logs an info message.
  * @function AppLogger_info
- * @description Logs an info message
- * @param {string} message - The message to log
- * @param {Object} [context] - Additional context information
+ * @param {string} message - The message to log.
+ * @param {LoggerContext} [context] - Additional context information.
+ * @returns {void}
  * @example
  * AppLogger_info('Operation completed successfully');
  * AppLogger_info('Data processed', { rowCount: 150, duration: 1200 });
@@ -23,10 +44,11 @@ function AppLogger_info(message, context) {
 }
 
 /**
+ * Logs a warning message.
  * @function AppLogger_warn
- * @description Logs a warning message
- * @param {string} message - The message to log
- * @param {Object} [context] - Additional context information
+ * @param {string} message - The message to log.
+ * @param {LoggerContext} [context] - Additional context information.
+ * @returns {void}
  * @example
  * AppLogger_warn('Missing optional parameter', { parameter: 'context' });
  */
@@ -36,11 +58,12 @@ function AppLogger_warn(message, context) {
 }
 
 /**
+ * Logs an error message.
  * @function AppLogger_error
- * @description Logs an error message
- * @param {string} message - The message to log
- * @param {Error|Object} [error] - Error object or additional context
- * @param {Object} [context] - Additional context information
+ * @param {string} message - The message to log.
+ * @param {Error|Object} [error] - Error object or additional context.
+ * @param {LoggerContext} [context] - Additional context information.
+ * @returns {void}
  * @example
  * try {
  *   // some operation
@@ -81,9 +104,10 @@ function AppLogger_error(message, error, context) {
 }
 
 /**
- * Logs a debug message
- * @param {string} message - The message to log
- * @param {Object} context - Additional context information
+ * Logs a debug message.
+ * @param {string} message - The message to log.
+ * @param {LoggerContext} [context] - Additional context information.
+ * @returns {void}
  */
 function AppLogger_debug(message, context) {
   context = context || {};
@@ -93,9 +117,10 @@ function AppLogger_debug(message, context) {
 }
 
 /**
- * Logs the start of an operation
- * @param {string} operation - Name of the operation
- * @param {Object} params - Operation parameters
+ * Logs the start of an operation.
+ * @param {string} operation - Name of the operation.
+ * @param {Object} [params] - Operation parameters.
+ * @returns {void}
  */
 function AppLogger_operationStart(operation, params) {
   params = params || {};
@@ -103,10 +128,11 @@ function AppLogger_operationStart(operation, params) {
 }
 
 /**
- * Logs the successful completion of an operation
- * @param {string} operation - Name of the operation
- * @param {Object} result - Operation result
- * @param {number} duration - Operation duration in milliseconds
+ * Logs the successful completion of an operation.
+ * @param {string} operation - Name of the operation.
+ * @param {Object} [result] - Operation result.
+ * @param {number} [duration] - Operation duration in milliseconds.
+ * @returns {void}
  */
 function AppLogger_operationSuccess(operation, result, duration) {
   result = result || {};
@@ -118,10 +144,11 @@ function AppLogger_operationSuccess(operation, result, duration) {
 }
 
 /**
- * Logs the failure of an operation
- * @param {string} operation - Name of the operation
- * @param {Error} error - The error that occurred
- * @param {Object} params - Operation parameters
+ * Logs the failure of an operation.
+ * @param {string} operation - Name of the operation.
+ * @param {Error} error - The error that occurred.
+ * @param {Object} [params] - Operation parameters.
+ * @returns {void}
  */
 function AppLogger_operationFailure(operation, error, params) {
   params = params || {};
@@ -129,10 +156,11 @@ function AppLogger_operationFailure(operation, error, params) {
 }
 
 /**
- * Logs data processing information
- * @param {string} action - The action being performed
- * @param {number} recordCount - Number of records processed
- * @param {Object} metadata - Additional metadata
+ * Logs data processing information.
+ * @param {string} action - The action being performed.
+ * @param {number} recordCount - Number of records processed.
+ * @param {Object} [metadata] - Additional metadata.
+ * @returns {void}
  */
 function AppLogger_dataProcessing(action, recordCount, metadata) {
   metadata = metadata || {};
@@ -149,11 +177,12 @@ function AppLogger_dataProcessing(action, recordCount, metadata) {
 }
 
 /**
- * Logs performance metrics
- * @param {string} metric - Name of the metric
- * @param {number} value - Metric value
- * @param {string} unit - Unit of measurement
- * @param {Object} context - Additional context
+ * Logs performance metrics.
+ * @param {string} metric - Name of the metric.
+ * @param {number} value - Metric value.
+ * @param {string} [unit='ms'] - Unit of measurement.
+ * @param {LoggerContext} [context] - Additional context.
+ * @returns {void}
  */
 function AppLogger_performance(metric, value, unit, context) {
   unit = unit || 'ms';
@@ -172,10 +201,11 @@ function AppLogger_performance(metric, value, unit, context) {
 }
 
 /**
- * Internal logging method
- * @param {string} level - Log level
- * @param {string} message - Message to log
- * @param {Object} context - Context information
+ * Internal logging method.
+ * @param {string} level - Log level.
+ * @param {string} message - Message to log.
+ * @param {LoggerContext} [context] - Context information.
+ * @returns {void}
  */
 function AppLogger_log(level, message, context) {
   context = context || {};
@@ -203,9 +233,9 @@ function AppLogger_log(level, message, context) {
 }
 
 /**
- * Creates a timer for measuring operation duration
- * @param {string} operation - Name of the operation being timed
- * @returns {Object} Timer object with stop method
+ * Creates a timer for measuring operation duration.
+ * @param {string} operation - Name of the operation being timed.
+ * @returns {{stop: function(): number}} Timer object with stop method returning duration in ms.
  */
 function AppLogger_startTimer(operation) {
   var startTime = Date.now();
@@ -220,9 +250,10 @@ function AppLogger_startTimer(operation) {
 }
 
 /**
- * Logs a batch operation summary
- * @param {string} operation - Name of the batch operation
- * @param {Array} results - Array of operation results
+ * Logs a batch operation summary.
+ * @param {string} operation - Name of the batch operation.
+ * @param {BatchResult[]} results - Array of operation results.
+ * @returns {void}
  */
 function AppLogger_batchSummary(operation, results) {
   var successful = 0;
@@ -254,7 +285,8 @@ function AppLogger_batchSummary(operation, results) {
 }
 
 /**
- * AppLogger object for backward compatibility and easier access
+ * AppLogger object for backward compatibility and easier access.
+ * @namespace AppLogger
  */
 var AppLogger = {
   info: AppLogger_info,

@@ -1,23 +1,24 @@
 /**
- * @fileoverview Google Sheets Service for NISD API Project
- * @description Google Sheets service for handling spreadsheet operations in the NISD API project.
+ * Google Sheets Service for NISD API Project
  * Provides methods for reading, writing, and managing spreadsheet data.
  * Compatible with Google Apps Script V8 runtime.
+ *
+ * @file Sheet service for NISD API project.
  * @author Alvaro Gomez, Academic Technology Coach
  * @version 2.0.0
  * @since 2025-08-04
  */
 
 /**
+ * Updates a specific sheet with new data.
  * @function SheetService_updateSheet
- * @description Updates a specific sheet with new data
- * @param {string} spreadsheetId - The ID of the target spreadsheet
- * @param {string} sheetName - The name of the sheet to update
- * @param {string} rangeToClear - The range to clear before inserting new data
- * @param {Array<Array<any>>} data - The data to insert
- * @param {string} [context] - Context for error messages
- * @returns {Object} Operation result with metadata
- * @throws {Error} If the operation fails
+ * @param {string} spreadsheetId - The ID of the target spreadsheet.
+ * @param {string} sheetName - The name of the sheet to update.
+ * @param {string} rangeToClear - The range to clear before inserting new data.
+ * @param {Array<Array<any>>} data - The data to insert.
+ * @param {string} [context] - Context for error messages.
+ * @returns {Object} Operation result with metadata.
+ * @throws {Error} If the operation fails.
  * @example
  * var data = [['Name', 'Age'], ['John', 25], ['Jane', 30]];
  * var result = SheetService_updateSheet(
@@ -87,13 +88,13 @@ function SheetService_updateSheet(spreadsheetId, sheetName, rangeToClear, data, 
 }
 
 /**
- * Reads data from a specific sheet range
- * @param {string} spreadsheetId - The ID of the source spreadsheet
- * @param {string} sheetName - The name of the sheet to read from
- * @param {string} range - The range to read (e.g., "A2:O")
- * @param {string} context - Context for error messages
- * @returns {Array<Array<any>>} The data from the specified range
- * @throws {Error} If the operation fails
+ * Reads data from a specific sheet range.
+ * @param {string} spreadsheetId - The ID of the source spreadsheet.
+ * @param {string} sheetName - The name of the sheet to read from.
+ * @param {string} range - The range to read (e.g., "A2:O").
+ * @param {string} [context] - Context for error messages.
+ * @returns {Array<Array<any>>} The data from the specified range.
+ * @throws {Error} If the operation fails.
  */
 function SheetService_readSheetData(spreadsheetId, sheetName, range, context) {
   context = context || 'Sheet read';
@@ -148,10 +149,10 @@ function SheetService_readSheetData(spreadsheetId, sheetName, range, context) {
 }
 
 /**
- * Batch updates multiple sheets with validation
- * @param {Array<Object>} updateOperations - Array of update operation objects
- * @param {string} context - Context for error messages
- * @returns {Array<Object>} Array of operation results
+ * Batch updates multiple sheets with validation.
+ * @param {Array<Object>} updateOperations - Array of update operation objects.
+ * @param {string} [context] - Context for error messages.
+ * @returns {Array<Object>} Array of operation results.
  */
 function SheetService_batchUpdateSheets(updateOperations, context) {
   context = context || 'Batch sheet update';
@@ -227,12 +228,12 @@ function SheetService_batchUpdateSheets(updateOperations, context) {
 }
 
 /**
- * Opens a spreadsheet by ID with error handling
+ * Opens a spreadsheet by ID with error handling.
  * @private
- * @param {string} spreadsheetId - The spreadsheet ID
- * @param {string} context - Context for error messages
- * @returns {GoogleAppsScript.Spreadsheet.Spreadsheet} The opened spreadsheet
- * @throws {Error} If the spreadsheet cannot be opened
+ * @param {string} spreadsheetId - The spreadsheet ID.
+ * @param {string} context - Context for error messages.
+ * @returns {GoogleAppsScript.Spreadsheet.Spreadsheet} The opened spreadsheet.
+ * @throws {Error} If the spreadsheet cannot be opened.
  */
 function SheetService__openSpreadsheet(spreadsheetId, context) {
   try {
@@ -250,13 +251,13 @@ function SheetService__openSpreadsheet(spreadsheetId, context) {
 }
 
 /**
- * Gets a sheet by name with validation
+ * Gets a sheet by name with validation.
  * @private
- * @param {GoogleAppsScript.Spreadsheet.Spreadsheet} spreadsheet - The spreadsheet object
- * @param {string} sheetName - The name of the sheet
- * @param {string} context - Context for error messages
- * @returns {GoogleAppsScript.Spreadsheet.Sheet} The sheet object
- * @throws {Error} If the sheet is not found
+ * @param {GoogleAppsScript.Spreadsheet.Spreadsheet} spreadsheet - The spreadsheet object.
+ * @param {string} sheetName - The name of the sheet.
+ * @param {string} context - Context for error messages.
+ * @returns {GoogleAppsScript.Spreadsheet.Sheet} The sheet object.
+ * @throws {Error} If the sheet is not found.
  */
 function SheetService__getSheet(spreadsheet, sheetName, context) {
   var sheet = spreadsheet.getSheetByName(sheetName);
@@ -265,11 +266,12 @@ function SheetService__getSheet(spreadsheet, sheetName, context) {
 }
 
 /**
- * Clears a range in a sheet
+ * Clears a range in a sheet.
  * @private
- * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet - The sheet object
- * @param {string} rangeToClear - The range to clear
- * @param {string} context - Context for error messages
+ * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet - The sheet object.
+ * @param {string} rangeToClear - The range to clear.
+ * @param {string} context - Context for error messages.
+ * @returns {void}
  */
 function SheetService__clearRange(sheet, rangeToClear, context) {
   try {
@@ -295,12 +297,12 @@ function SheetService__clearRange(sheet, rangeToClear, context) {
 }
 
 /**
- * Inserts data into a sheet starting at row 2
+ * Inserts data into a sheet starting at row 2.
  * @private
- * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet - The sheet object
- * @param {Array<Array<any>>} data - The data to insert
- * @param {string} context - Context for error messages
- * @returns {number} Number of rows inserted
+ * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet - The sheet object.
+ * @param {Array<Array<any>>} data - The data to insert.
+ * @param {string} context - Context for error messages.
+ * @returns {number} Number of rows inserted.
  */
 function SheetService__insertData(sheet, data, context) {
   try {
@@ -339,10 +341,11 @@ function SheetService__insertData(sheet, data, context) {
 }
 
 /**
- * Adds a timestamp note to cell A1
+ * Adds a timestamp note to cell A1.
  * @private
- * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet - The sheet object
- * @param {string} context - Context for error messages
+ * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet - The sheet object.
+ * @param {string} context - Context for error messages.
+ * @returns {void}
  */
 function SheetService__addTimestampNote(sheet, context) {
   try {
@@ -365,10 +368,10 @@ function SheetService__addTimestampNote(sheet, context) {
 }
 
 /**
- * Gets spreadsheet metadata
- * @param {string} spreadsheetId - The ID of the spreadsheet
- * @returns {Object} Spreadsheet metadata
- * @throws {Error} If the spreadsheet cannot be accessed
+ * Gets spreadsheet metadata.
+ * @param {string} spreadsheetId - The ID of the spreadsheet.
+ * @returns {Object} Spreadsheet metadata.
+ * @throws {Error} If the spreadsheet cannot be accessed.
  */
 function SheetService_getSpreadsheetMetadata(spreadsheetId) {
   try {
@@ -394,11 +397,12 @@ function SheetService_getSpreadsheetMetadata(spreadsheetId) {
 }
 
 /**
- * Validates that all required sheets exist in a spreadsheet
- * @param {string} spreadsheetId - The ID of the spreadsheet
- * @param {Array<string>} requiredSheets - Array of required sheet names
- * @param {string} context - Context for error messages
- * @throws {Error} If any required sheets are missing
+ * Validates that all required sheets exist in a spreadsheet.
+ * @param {string} spreadsheetId - The ID of the spreadsheet.
+ * @param {Array<string>} requiredSheets - Array of required sheet names.
+ * @param {string} [context] - Context for error messages.
+ * @throws {Error} If any required sheets are missing.
+ * @returns {void}
  */
 function SheetService_validateRequiredSheets(spreadsheetId, requiredSheets, context) {
   context = context || 'Sheet validation';
@@ -430,7 +434,8 @@ function SheetService_validateRequiredSheets(spreadsheetId, requiredSheets, cont
 }
 
 /**
- * SheetService object for backward compatibility and easier access
+ * SheetService object for backward compatibility and easier access.
+ * @namespace SheetService
  */
 var SheetService = {
   updateSheet: SheetService_updateSheet,

@@ -1,17 +1,18 @@
 /**
  * Date and time utilities for the NISD API project.
- * Provides consistent date formatting and timezone handling.
+ * Provides consistent date formatting, parsing, and timezone handling.
  * Compatible with Google Apps Script V8 runtime.
- * 
+ *
+ * @file Date and time utilities for NISD API project.
  * @author Alvaro Gomez, Academic Technology Coach
  */
 
 /**
- * Formats a date according to the application's standard format
- * @param {Date} date - The date to format
- * @param {string} format - Optional format string (defaults to CONFIG.SETTINGS.dateFormat)
- * @param {string} timezone - Optional timezone (defaults to CONFIG.SETTINGS.timezone)
- * @returns {string} Formatted date string
+ * Formats a date according to the application's standard format.
+ * @param {Date} [date] - The date to format (defaults to now).
+ * @param {string} [format] - Format string (defaults to CONFIG.SETTINGS.dateFormat).
+ * @param {string} [timezone] - Timezone (defaults to CONFIG.SETTINGS.timezone).
+ * @returns {string} Formatted date string.
  */
 function DateUtils_formatDate(date, format, timezone) {
   date = date || new Date();
@@ -27,26 +28,26 @@ function DateUtils_formatDate(date, format, timezone) {
 }
 
 /**
- * Gets the current timestamp in ISO format
- * @returns {string} ISO timestamp string
+ * Gets the current timestamp in ISO format.
+ * @returns {string} ISO timestamp string.
  */
 function DateUtils_getCurrentTimestamp() {
   return new Date().toISOString();
 }
 
 /**
- * Gets the current date formatted for display
- * @returns {string} Formatted current date
+ * Gets the current date formatted for display.
+ * @returns {string} Formatted current date string.
  */
 function DateUtils_getCurrentDateFormatted() {
   return DateUtils_formatDate();
 }
 
 /**
- * Creates a timestamp note for spreadsheet cells
- * @param {string} action - The action that was performed
- * @param {Date} date - Optional date (defaults to current date)
- * @returns {string} Formatted timestamp note
+ * Creates a timestamp note for spreadsheet cells.
+ * @param {string} [action] - The action that was performed (default 'Updated').
+ * @param {Date} [date] - Date of the action (defaults to now).
+ * @returns {string} Formatted timestamp note.
  */
 function DateUtils_createTimestampNote(action, date) {
   action = action || 'Updated';
@@ -57,9 +58,9 @@ function DateUtils_createTimestampNote(action, date) {
 }
 
 /**
- * Creates a timestamp note for script updates
- * @param {Date} date - Optional date (defaults to current date)
- * @returns {string} Formatted script timestamp note
+ * Creates a timestamp note for script updates.
+ * @param {Date} [date] - Date of the update (defaults to now).
+ * @returns {string} Formatted script timestamp note.
  */
 function DateUtils_createScriptTimestampNote(date) {
   date = date || new Date();
@@ -68,10 +69,10 @@ function DateUtils_createScriptTimestampNote(date) {
 }
 
 /**
- * Parses a date string into a Date object
- * @param {string} dateString - The date string to parse
- * @param {string} timezone - Optional timezone
- * @returns {Date|null} Parsed date or null if parsing fails
+ * Parses a date string into a Date object.
+ * @param {string} dateString - The date string to parse.
+ * @param {string} [timezone] - Timezone to use (defaults to CONFIG.SETTINGS.timezone).
+ * @returns {Date|null} Parsed date or null if parsing fails.
  */
 function DateUtils_parseDate(dateString, timezone) {
   timezone = timezone || CONFIG.SETTINGS.timezone;
@@ -90,20 +91,20 @@ function DateUtils_parseDate(dateString, timezone) {
 }
 
 /**
- * Checks if a date is within a specified range
- * @param {Date} date - The date to check
- * @param {Date} startDate - Range start date
- * @param {Date} endDate - Range end date
- * @returns {boolean} True if date is within range
+ * Checks if a date is within a specified range.
+ * @param {Date} date - The date to check.
+ * @param {Date} startDate - Range start date.
+ * @param {Date} endDate - Range end date.
+ * @returns {boolean} True if date is within range.
  */
 function DateUtils_isDateInRange(date, startDate, endDate) {
   return date >= startDate && date <= endDate;
 }
 
 /**
- * Gets the start of the current day
- * @param {string} timezone - Optional timezone
- * @returns {Date} Start of current day
+ * Gets the start of the current day.
+ * @param {string} [timezone] - Timezone (defaults to CONFIG.SETTINGS.timezone).
+ * @returns {Date} Start of current day.
  */
 function DateUtils_getStartOfDay(timezone) {
   timezone = timezone || CONFIG.SETTINGS.timezone;
@@ -113,9 +114,9 @@ function DateUtils_getStartOfDay(timezone) {
 }
 
 /**
- * Gets the end of the current day
- * @param {string} timezone - Optional timezone
- * @returns {Date} End of current day
+ * Gets the end of the current day.
+ * @param {string} [timezone] - Timezone (defaults to CONFIG.SETTINGS.timezone).
+ * @returns {Date} End of current day.
  */
 function DateUtils_getEndOfDay(timezone) {
   timezone = timezone || CONFIG.SETTINGS.timezone;
@@ -125,10 +126,10 @@ function DateUtils_getEndOfDay(timezone) {
 }
 
 /**
- * Adds days to a date
- * @param {Date} date - Base date
- * @param {number} days - Number of days to add (can be negative)
- * @returns {Date} New date with days added
+ * Adds days to a date.
+ * @param {Date} date - Base date.
+ * @param {number} days - Number of days to add (can be negative).
+ * @returns {Date} New date with days added.
  */
 function DateUtils_addDays(date, days) {
   var result = new Date(date);
@@ -137,10 +138,10 @@ function DateUtils_addDays(date, days) {
 }
 
 /**
- * Gets a human-readable time difference
- * @param {Date} date1 - First date
- * @param {Date} date2 - Second date (defaults to now)
- * @returns {string} Human-readable time difference
+ * Gets a human-readable time difference.
+ * @param {Date} date1 - First date.
+ * @param {Date} [date2] - Second date (defaults to now).
+ * @returns {string} Human-readable time difference.
  */
 function DateUtils_getTimeDifference(date1, date2) {
   date2 = date2 || new Date();
@@ -158,9 +159,9 @@ function DateUtils_getTimeDifference(date1, date2) {
 }
 
 /**
- * Validates if a string represents a valid date
- * @param {string} dateString - The date string to validate
- * @returns {boolean} True if valid date string
+ * Validates if a string represents a valid date.
+ * @param {string} dateString - The date string to validate.
+ * @returns {boolean} True if valid date string.
  */
 function DateUtils_isValidDateString(dateString) {
   var date = DateUtils_parseDate(dateString);
@@ -168,7 +169,8 @@ function DateUtils_isValidDateString(dateString) {
 }
 
 /**
- * DateUtils object for backward compatibility and easier access
+ * DateUtils object for backward compatibility and easier access.
+ * @namespace DateUtils
  */
 var DateUtils = {
   formatDate: DateUtils_formatDate,

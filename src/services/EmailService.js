@@ -1,21 +1,25 @@
 /**
- * @fileoverview Email Service for NISD API Project
- * @description Email service for handling Gmail operations in the NISD API project.
- * Provides methods for retrieving emails, attachments, and managing Gmail labels.
+ * @file EmailService.js
+ * @module EmailService
+ * @description Provides functions for Gmail label and email attachment operations, including label management, email retrieval, and attachment extraction.
  * Compatible with Google Apps Script V8 runtime.
+ *
+ * @typedef {Object} EmailConfig
+ * @property {string} label - Gmail label to use for filtering emails
+ * @property {string} sheetName - Associated sheet name for processing
+ *
  * @author Alvaro Gomez, Academic Technology Coach
  * @version 2.0.0
  * @since 2025-08-04
  */
 
 /**
- * @function EmailService_getLatestEmailByLabel
- * @description Retrieves the latest email from a specific Gmail label
- * @param {string} labelName - The Gmail label to search for
- * @returns {GoogleAppsScript.Gmail.GmailMessage} The latest email message
- * @throws {Error} If the label doesn't exist or no emails are found
+ * Gets the latest email message for a given Gmail label.
+ * @function
+ * @param {string} labelName - The Gmail label to search.
+ * @returns {GoogleAppsScript.Gmail.GmailMessage} The latest email message.
+ * @throws {Error} If no email is found for the label.
  * @example
- * // Get latest email from a specific label
  * var email = EmailService_getLatestEmailByLabel('Reports/Daily');
  * console.log('Email subject: ' + email.getSubject());
  */
@@ -65,12 +69,12 @@ function EmailService_getLatestEmailByLabel(labelName) {
 }
 
 /**
- * @function EmailService_getExcelAttachment
- * @description Extracts an Excel attachment from an email message
- * @param {GoogleAppsScript.Gmail.GmailMessage} message - The email message
- * @param {string} [context] - Context for error messages
- * @returns {GoogleAppsScript.Base.Blob} The Excel attachment as a Blob
- * @throws {Error} If no Excel attachment is found
+ * Extracts an Excel attachment from an email message.
+ * @function
+ * @param {GoogleAppsScript.Gmail.GmailMessage} message - The email message.
+ * @param {string} [context] - Context for error messages.
+ * @returns {GoogleAppsScript.Base.Blob} The Excel attachment as a Blob.
+ * @throws {Error} If no Excel attachment is found.
  * @example
  * var email = EmailService_getLatestEmailByLabel('Reports/Daily');
  * var attachment = EmailService_getExcelAttachment(email, 'Daily report processing');
@@ -147,8 +151,9 @@ function EmailService_getExcelAttachment(message, context) {
 }
 
 /**
- * Retrieves all available Gmail labels
- * @returns {Array<string>} Array of label names
+ * Retrieves all available Gmail labels.
+ * @function
+ * @returns {Array<string>} Array of label names.
  */
 function EmailService_getAllLabels() {
   var timer = AppLogger_startTimer('getAllLabels');
@@ -173,9 +178,10 @@ function EmailService_getAllLabels() {
 }
 
 /**
- * Checks if a Gmail label exists
- * @param {string} labelName - The label name to check
- * @returns {boolean} True if the label exists
+ * Checks if a Gmail label exists.
+ * @function
+ * @param {string} labelName - The label name to check.
+ * @returns {boolean} True if the label exists, false otherwise.
  */
 function EmailService_labelExists(labelName) {
   try {
@@ -191,9 +197,10 @@ function EmailService_labelExists(labelName) {
 }
 
 /**
- * Gets email count for a specific label
- * @param {string} labelName - The Gmail label to check
- * @returns {number} Number of emails with the label
+ * Gets the number of emails for a specific Gmail label.
+ * @function
+ * @param {string} labelName - The Gmail label to check.
+ * @returns {number} Number of emails with the label.
  */
 function EmailService_getEmailCountByLabel(labelName) {
   try {
@@ -220,9 +227,10 @@ function EmailService_getEmailCountByLabel(labelName) {
 }
 
 /**
- * Gets the latest email date for a specific label
- * @param {string} labelName - The Gmail label to check
- * @returns {Date|null} Date of the latest email or null if no emails found
+ * Gets the date of the latest email for a specific Gmail label.
+ * @function
+ * @param {string} labelName - The Gmail label to check.
+ * @returns {Date|null} Date of the latest email or null if no emails found.
  */
 function EmailService_getLatestEmailDate(labelName) {
   try {
@@ -235,9 +243,10 @@ function EmailService_getLatestEmailDate(labelName) {
 }
 
 /**
- * Validates email configuration and checks label existence
- * @param {Object} emailConfig - The email configuration to validate
- * @throws {Error} If the configuration is invalid or label doesn't exist
+ * Validates email configuration and checks label existence in Gmail.
+ * @function
+ * @param {EmailConfig} emailConfig - The email configuration to validate.
+ * @throws {Error} If the configuration is invalid or label doesn't exist.
  */
 function EmailService_validateEmailConfigWithGmail(emailConfig) {
   // First validate the structure
@@ -259,7 +268,15 @@ function EmailService_validateEmailConfigWithGmail(emailConfig) {
 }
 
 /**
- * EmailService object for backward compatibility and easier access
+ * EmailService object for backward compatibility and easier access.
+ * @namespace EmailService
+ * @property {function} getLatestEmailByLabel
+ * @property {function} getExcelAttachment
+ * @property {function} getAllLabels
+ * @property {function} labelExists
+ * @property {function} getEmailCountByLabel
+ * @property {function} getLatestEmailDate
+ * @property {function} validateEmailConfigWithGmail
  */
 var EmailService = {
   getLatestEmailByLabel: EmailService_getLatestEmailByLabel,

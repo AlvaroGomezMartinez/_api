@@ -1,15 +1,73 @@
 /**
  * Utility functions for the NISD API project.
- * Contains helper functions that were previously in separate utility files.
+ * Contains helper functions for logging, system info, connectivity tests, and formatting.
  * Compatible with Google Apps Script V8 runtime.
- * 
+ *
+ * @file Utility functions for NISD API project.
  * @author Alvaro Gomez, Academic Technology Coach
  */
 
 /**
- * Lists all Gmail labels (utility function for development/debugging)
- * This function was used to get the list of Gmail labels for configuration
- * @returns {Array<string>} Array of Gmail label names
+ * @typedef {Object} SystemInfo
+ * @property {string} timestamp - Current timestamp.
+ * @property {string} timezone - Script timezone.
+ * @property {string} userEmail - Active user's email.
+ * @property {string} scriptTimeZone - Configured timezone.
+ * @property {Object} quotas - Quota information.
+ * @property {number} quotas.emailQuota - Remaining daily email quota.
+ * @property {number} quotas.driveQuota - Used Drive storage.
+ */
+
+/**
+ * @typedef {Object} EmailConnectivityTestResult
+ * @property {string} timestamp - Timestamp of test.
+ * @property {Object} tests - Test results by label/sheet.
+ */
+
+/**
+ * @typedef {Object} SpreadsheetConnectivityTestResult
+ * @property {string} timestamp - Timestamp of test.
+ * @property {Object} tests - Test results for spreadsheets.
+ */
+
+/**
+ * @typedef {Object} SystemTestResults
+ * @property {string} timestamp - Timestamp of test.
+ * @property {string} overall - Overall status (PASS/FAIL/WARN).
+ * @property {Object} tests - Individual test results.
+ */
+
+/**
+ * Higher-order function to wrap business logic with standard error handling and logging.
+ * @template T
+ * @param {function(...*):T} fn - The function containing business logic.
+ * @param {string} operationName - Name of the operation for logging.
+ * @param {Object} [context] - Optional context object for logging.
+ * @returns {function(...*):T} Wrapped function with error handling and logging.
+ * @example
+ * const safeFn = withOperationLogging(myFunction, 'myOperation');
+ * safeFn(arg1, arg2);
+ */
+function withOperationLogging(fn, operationName, context) {
+  return function(...args) {
+    var timer = AppLogger_startTimer(operationName);
+    try {
+      AppLogger_operationStart(operationName, context);
+      var result = fn.apply(this, args);
+      AppLogger_operationSuccess(operationName, result, timer.stop());
+      return result;
+    } catch (error) {
+      AppLogger_operationFailure(operationName, error);
+      ErrorHandler_handle(error, operationName, context);
+      throw error;
+    }
+  };
+}
+
+/**
+ * Lists all Gmail labels (utility function for development/debugging).
+ * Used to get the list of Gmail labels for configuration.
+ * @returns {string[]} Array of Gmail label names.
  */
 function Utils_listGmailLabels() {
   try {
@@ -37,8 +95,8 @@ function Utils_listGmailLabels() {
 }
 
 /**
- * Gets system information for debugging
- * @returns {Object} System information
+ * Gets system information for debugging.
+ * @returns {SystemInfo} System information object.
  */
 function Utils_getSystemInfo() {
   try {
@@ -63,8 +121,9 @@ function Utils_getSystemInfo() {
 }
 
 /**
- * Tests email service connectivity
- * @returns {Object} Test results
+ * Tests email service connectivity.
+ * Checks Gmail access and configured labels.
+ * @returns {EmailConnectivityTestResult} Test results object.
  */
 function Utils_testEmailConnectivity() {
   try {
@@ -121,8 +180,9 @@ function Utils_testEmailConnectivity() {
 }
 
 /**
- * Tests spreadsheet connectivity
- * @returns {Object} Test results
+ * Tests spreadsheet connectivity.
+ * Checks main and target spreadsheets.
+ * @returns {SpreadsheetConnectivityTestResult} Test results object.
  */
 function Utils_testSpreadsheetConnectivity() {
   try {
@@ -186,8 +246,9 @@ function Utils_testSpreadsheetConnectivity() {
 }
 
 /**
- * Runs a comprehensive system test
- * @returns {Object} Complete test results
+ * Runs a comprehensive system test.
+ * Runs system info, email, spreadsheet, and data push tests.
+ * @returns {SystemTestResults} Complete test results object.
  */
 function Utils_runSystemTests() {
   try {
@@ -254,7 +315,8 @@ function Utils_runSystemTests() {
 }
 
 /**
- * Clears all logs (for development/debugging)
+ * Clears all logs (for development/debugging).
+ * @returns {void}
  */
 function Utils_clearLogs() {
   try {
@@ -266,10 +328,10 @@ function Utils_clearLogs() {
 }
 
 /**
- * Formats data for display in logs
- * @param {any} data - Data to format
- * @param {number} maxLength - Maximum length for string representation
- * @returns {string} Formatted data string
+ * Formats data for display in logs.
+ * @param {*} data - Data to format.
+ * @param {number} [maxLength=100] - Maximum length for string representation.
+ * @returns {string} Formatted data string.
  */
 function Utils_formatDataForLog(data, maxLength) {
   maxLength = maxLength || 100;
@@ -286,8 +348,8 @@ function Utils_formatDataForLog(data, maxLength) {
 }
 
 /**
- * Gets configuration summary
- * @returns {Object} Configuration summary
+ * Gets configuration summary.
+ * @returns {Object} Configuration summary object.
  */
 function Utils_getConfigurationSummary() {
   return {
@@ -309,7 +371,8 @@ function Utils_getConfigurationSummary() {
 }
 
 /**
- * Utils object for backward compatibility and easier access
+ * Utils object for backward compatibility and easier access.
+ * @namespace Utils
  */
 var Utils = {
   listGmailLabels: Utils_listGmailLabels,

@@ -1,20 +1,22 @@
 /**
- * @fileoverview Error Handler Utility for NISD API Project
- * @description Centralized error handling utility for the NISD API project.
+ * Error Handler Utility for NISD API Project
+ * Centralized error handling utility for the NISD API project.
  * Provides consistent error handling, logging, and retry mechanisms.
  * Compatible with Google Apps Script V8 runtime.
+ *
+ * @file Error handler utilities for NISD API project.
  * @author Alvaro Gomez, Academic Technology Coach
  * @version 2.0.0
  * @since 2025-08-04
  */
 
 /**
+ * Handles errors with consistent logging and formatting.
  * @function ErrorHandler_handle
- * @description Handles errors with consistent logging and formatting
- * @param {Error} error - The error object to handle
- * @param {string} [context] - Context information about where the error occurred
- * @param {Object} [additionalInfo] - Additional information to log
- * @returns {string} Formatted error message
+ * @param {Error} error - The error object to handle.
+ * @param {string} [context] - Context information about where the error occurred.
+ * @param {Object} [additionalInfo] - Additional information to log.
+ * @returns {string} Formatted error message.
  * @example
  * try {
  *   // some operation
@@ -50,13 +52,14 @@ function ErrorHandler_handle(error, context, additionalInfo) {
 }
 
 /**
- * Executes an operation with retry logic
- * @param {Function} operation - The operation to execute
- * @param {number} maxRetries - Maximum number of retry attempts
- * @param {number} delay - Delay between retries in milliseconds
- * @param {string} context - Context for error messages
- * @returns {*} Result of the operation
- * @throws {Error} If all retry attempts fail
+ * Executes an operation with retry logic.
+ * @template T
+ * @param {function():T} operation - The operation to execute.
+ * @param {number} [maxRetries] - Maximum number of retry attempts (default from config).
+ * @param {number} [delay] - Delay between retries in milliseconds (default from config).
+ * @param {string} [context] - Context for error messages.
+ * @returns {T} Result of the operation.
+ * @throws {Error} If all retry attempts fail.
  */
 function ErrorHandler_withRetry(operation, maxRetries, delay, context) {
   maxRetries = maxRetries !== undefined ? maxRetries : CONFIG.RETRY_CONFIG.maxRetries;
@@ -91,11 +94,11 @@ function ErrorHandler_withRetry(operation, maxRetries, delay, context) {
 }
 
 /**
- * Creates a standardized error object
- * @param {string} message - Error message
- * @param {string} code - Error code
- * @param {Object} details - Additional error details
- * @returns {Error} Standardized error object
+ * Creates a standardized error object.
+ * @param {string} message - Error message.
+ * @param {string} [code] - Error code.
+ * @param {Object} [details] - Additional error details.
+ * @returns {Error} Standardized error object.
  */
 function ErrorHandler_createError(message, code, details) {
   code = code || 'GENERAL_ERROR';
@@ -109,11 +112,12 @@ function ErrorHandler_createError(message, code, details) {
 }
 
 /**
- * Validates required parameters and throws descriptive errors
- * @param {Object} params - Parameters to validate
- * @param {Array<string>} required - Array of required parameter names
- * @param {string} context - Context for error messages
- * @throws {Error} If any required parameters are missing
+ * Validates required parameters and throws descriptive errors.
+ * @param {Object} params - Parameters to validate.
+ * @param {Array<string>} required - Array of required parameter names.
+ * @param {string} [context] - Context for error messages.
+ * @throws {Error} If any required parameters are missing.
+ * @returns {void}
  */
 function ErrorHandler_validateRequired(params, required, context) {
   context = context || 'Operation';
@@ -132,7 +136,8 @@ function ErrorHandler_validateRequired(params, required, context) {
 }
 
 /**
- * Error Handler object for backward compatibility and easier access
+ * Error Handler object for backward compatibility and easier access.
+ * @namespace ErrorHandler
  */
 var ErrorHandler = {
   handle: ErrorHandler_handle,
@@ -142,7 +147,8 @@ var ErrorHandler = {
 };
 
 /**
- * Error codes for common error types
+ * Error codes for common error types.
+ * @constant
  */
 var ERROR_CODES = {
   MISSING_PARAMETERS: 'MISSING_PARAMETERS',
