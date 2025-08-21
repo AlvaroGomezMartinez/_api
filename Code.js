@@ -16,18 +16,16 @@
  * 
  * ## Data Sources
  * **Manual Updates Required (Partially Active):**
- * - Alt_HS_Attendance_Enrollment_Count (Active)
- * - Alt_MS_Attendance_Enrollment_Count (Active)
  * - Entry_Withdrawal (Disabled)
  * - Allergies (Disabled)
- * (Most manual features were temporarily disabled on 2025-08-12 but attendance features have been re-enabled)
+ * (Manual features were disabled on 2025-08-12 because the campus wasn't using those reports this year)
  * 
  * **Automated Updates:**
  * - Schedules
  * - ContactInfo
  * - Entry_Withdrawal2
- * - Alt_HS_Attendance_Enrollment_Count (Also has automated email processing)
- * - Alt_MS_Attendance_Enrollment_Count (Also has automated email processing)
+ * - Alt_HS_Attendance_Enrollment_Count
+ * - Alt_MS_Attendance_Enrollment_Count
  * (Updated via Cognos report subscriptions and email triggers)
  * 
  * ## Architecture
@@ -38,9 +36,9 @@
  * - Comprehensive validation
  * 
  * ## Automation Schedule
- * Time-based triggers run every weekday at 5:00 AM (one for each day of the week)
- * after Cognos emails are received (scheduled between 4:00 - 4:03 AM).
- * Emails are automatically labeled using Gmail's labeling rules service.
+ * Five time-based triggers run every weekday at 5:00 AM (one for each day of the week)
+ * Cognos emails the reports daily (scheduled between 3:00 - 3:05 AM).
+ * Emails are automatically labeled and filtered using Gmail's labeling rules service.
  * 
  * @author Alvaro Gomez, Academic Technology Coach
  * @contact Office: 1-210-397-9408 | Cell: 1-210-363-1577
@@ -122,33 +120,33 @@ function updateSheetsFromEmail() {
  * @param {string} sheetName - The name of the sheet to update within the spreadsheet
  * @param {string} rangeToClear - The range to clear before inserting new data
  */
-function processEmailToSheet(labelName, spreadsheetId, sheetName, rangeToClear) {
-  try {
-    AppLogger_warn('Using deprecated processEmailToSheet function', {
-      labelName: labelName,
-      spreadsheetId: spreadsheetId,
-      sheetName: sheetName,
-      rangeToClear: rangeToClear
-    });
+// function processEmailToSheet(labelName, spreadsheetId, sheetName, rangeToClear) {
+//   try {
+//     AppLogger_warn('Using deprecated processEmailToSheet function', {
+//       labelName: labelName,
+//       spreadsheetId: spreadsheetId,
+//       sheetName: sheetName,
+//       rangeToClear: rangeToClear
+//     });
     
-    // Create a temporary config object
-    var config = {
-      label: labelName,
-      sheetName: sheetName,
-      rangeToClear: rangeToClear
-    };
+//     // Create a temporary config object
+//     var config = {
+//       label: labelName,
+//       sheetName: sheetName,
+//       rangeToClear: rangeToClear
+//     };
     
-    // Use the new EmailProcessor
-    var result = EmailProcessor_processSingleConfig(config, 'processEmailToSheet_legacy');
+//     // Use the new EmailProcessor
+//     var result = EmailProcessor_processSingleConfig(config, 'processEmailToSheet_legacy');
     
-    Logger.log('Data inserted into sheet "' + sheetName + '" successfully!');
-    return result;
+//     Logger.log('Data inserted into sheet "' + sheetName + '" successfully!');
+//     return result;
     
-  } catch (error) {
-    var errorMessage = ErrorHandler_handle(error, 'processEmailToSheet (legacy)');
-    throw error;
-  }
-}
+//   } catch (error) {
+//     var errorMessage = ErrorHandler_handle(error, 'processEmailToSheet (legacy)');
+//     throw error;
+//   }
+// }
 
 /**
  * Legacy function for backward compatibility
@@ -158,18 +156,18 @@ function processEmailToSheet(labelName, spreadsheetId, sheetName, rangeToClear) 
  * @param {Blob} fileBlob - The Excel file attachment as a Blob object
  * @returns {Array<Array<string>>} The extracted data from the Excel file, excluding the header row
  */
-function processExcelData(fileBlob) {
-  try {
-    AppLogger_warn('Using deprecated processExcelData function');
+// function processExcelData(fileBlob) {
+//   try {
+//     AppLogger_warn('Using deprecated processExcelData function');
     
-    // Use the new DriveService
-    return DriveService_processExcelData(fileBlob, 'processExcelData_legacy');
+//     // Use the new DriveService
+//     return DriveService_processExcelData(fileBlob, 'processExcelData_legacy');
     
-  } catch (error) {
-    var errorMessage = ErrorHandler_handle(error, 'processExcelData (legacy)');
-    throw error;
-  }
-}
+//   } catch (error) {
+//     var errorMessage = ErrorHandler_handle(error, 'processExcelData (legacy)');
+//     throw error;
+//   }
+// }
 
 // ================================
 // NEW REFACTORED ENTRY POINTS
