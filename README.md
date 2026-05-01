@@ -1,16 +1,13 @@
-# NISD API PROJECT
-## Northside ISD<br>Department of Academic Technology
+# _DataLake Project
 
-### Project Description
-This project supports a Google spreadsheet that simulates an API. The spreadsheet contains multiple sheets that feed information to separate projects. The spreadsheet is meant to make data gathering more time efficient. Manual data push features have been temporarily disabled (2025-08-12) but can be re-activated as needed. Automated email processing features remain active.
-
-**The project has been completely refactored** to use a modern, modular architecture with improved error handling, logging, and maintainability.
+## Project Description
+This project supports a Google spreadsheet that simulates an API. The spreadsheet contains five sheets that feed data to separate projects. The spreadsheet is meant to automate data gathering. Manual data push features have been temporarily disabled (2025-08-12) but can be re-activated as needed. Automated email processing features remain active.
 
 > **📋 Important**: Some features have been temporarily disabled. See [`DISABLED_FEATURES.md`](./DISABLED_FEATURES.md) for details and re-activation instructions.
 
-### Architecture Overview
+## Architecture Overview
 
-The refactored codebase follows a layered architecture pattern:
+The codebase follows a layered architecture pattern:
 
 ```
 ├── src/
