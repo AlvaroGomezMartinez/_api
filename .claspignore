@@ -2,9 +2,9 @@
 **
 
 # Allow only pushable GAS files
-!src/*.js
-!src/appsscript.json
-!src/config/*.js
-!src/main/*.js
-!src/services/*.js
-!src/utils/*.js
+!*.js
+!appsscript.json
+!config/*.js
+!main/*.js
+!services/*.js
+!utils/*.js
