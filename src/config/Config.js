@@ -1,15 +1,56 @@
 /**
- * NISD API Project Configuration
- * Central configuration file for the NISD API project.
+ * DataLake Project Configuration
+ * Central configuration file for the DataLake project.
  * Contains all constants, spreadsheet IDs, and configuration objects.
  * Compatible with Google Apps Script V8 runtime.
  *
- * @file Project configuration for NISD API project.
- * @author Alvaro Gomez, Academic Technology Coach
- * @contact alvaro.gomez@nisd.net
- * @version 2.0.0
+ * Spreadsheet IDs are loaded from Script Properties at runtime.
+ * Run setupScriptProperties() once after deployment to initialize them.
+ *
+ * Required Script Properties:
+ *   SPREADSHEET_MAIN             - Main data lake spreadsheet ID
+ *   SPREADSHEET_TARGET_1         - First target/criteria spreadsheet ID
+ *   SPREADSHEET_TARGET_2         - Second target/criteria spreadsheet ID
+ *   SPREADSHEET_NOTES            - Notes/handoff spreadsheet ID (optional)
+ *
+ * @file Project configuration for DataLake project.
+ * @author Alvaro Gomez
+ * @version 2.1.0
  * @since 2025-08-04
  */
+
+/**
+ * Loads all spreadsheet IDs from Script Properties.
+ * Falls back to empty strings if a property is not set (will surface as a
+ * clear error when the script tries to open the spreadsheet).
+ * @returns {Object} Spreadsheet ID map.
+ */
+function Config_getSpreadsheetIds() {
+  var props = PropertiesService.getScriptProperties();
+  return {
+    MAIN:                props.getProperty('SPREADSHEET_MAIN')        || '',
+    TARGET_1:            props.getProperty('SPREADSHEET_TARGET_1')    || '',
+    TARGET_2:            props.getProperty('SPREADSHEET_TARGET_2')    || '',
+    NOTES:               props.getProperty('SPREADSHEET_NOTES')       || '',
+  };
+}
+
+/**
+ * One-time setup: stores spreadsheet IDs as Script Properties.
+ * Run this function once from the GAS editor after cloning/deploying the project.
+ * Edit the values below before running.
+ * @function
+ */
+function setupScriptProperties() {
+  var props = PropertiesService.getScriptProperties();
+  props.setProperties({
+    'SPREADSHEET_MAIN':     'YOUR_MAIN_SPREADSHEET_ID',
+    'SPREADSHEET_TARGET_1': 'YOUR_TARGET_1_SPREADSHEET_ID',
+    'SPREADSHEET_TARGET_2': 'YOUR_TARGET_2_SPREADSHEET_ID',
+    'SPREADSHEET_NOTES':    'YOUR_NOTES_SPREADSHEET_ID',
+  });
+  Logger.log('Script Properties set. Verify with: PropertiesService.getScriptProperties().getProperties()');
+}
 
 /**
  * Main configuration object containing all project settings.
@@ -22,20 +63,23 @@
  * // Access push data configurations
  * var pushConfigs = CONFIG.PUSH_DATA_CONFIGS;
  */
+var _IDS = Config_getSpreadsheetIds();
+
 var CONFIG = {
   /**
    * @type {Object}
-   * @description Spreadsheet IDs for various data sources and targets
-   * @property {string} MAIN - Main project spreadsheet ID
-   * @property {string} NAHS_CRITERIA - NAHS criteria spreadsheet ID
-   * @property {string} NAMS_CRITERIA - NAMS criteria spreadsheet ID
-   * @property {string} NAHS_TRANSITION_NOTES - NAHS transition notes spreadsheet ID
+   * @description Spreadsheet IDs loaded from Script Properties at runtime.
+   * Set these via setupScriptProperties() before first use.
+   * @property {string} MAIN - Main data lake spreadsheet ID
+   * @property {string} TARGET_1 - First target/criteria spreadsheet ID
+   * @property {string} TARGET_2 - Second target/criteria spreadsheet ID
+   * @property {string} NOTES - Notes/handoff spreadsheet ID
    */
   SPREADSHEETS: {
-    MAIN: "1uCQ_Z4QLbHq89tutZ4Wen0TREwS8qEx2j7MmzUgXOaY",
-    NAHS_CRITERIA: "1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA",
-    NAMS_CRITERIA: "1q61g_br0jmqtAvyQhNYto1jezfzjttmsKAAG-pznXak",
-    NAHS_TRANSITION_NOTES: "14-nvlNOLWebnJJOQNZPnglWx0OuE5U-_xEbXGodND6E",
+    MAIN:   _IDS.MAIN,
+    TARGET_1: _IDS.TARGET_1,
+    TARGET_2: _IDS.TARGET_2,
+    NOTES:  _IDS.NOTES,
   },
 
   /**
@@ -113,7 +157,7 @@ var CONFIG = {
       //   range: "A2:H",
       //   targets: [
       //     {
-      //       spreadsheetId: "1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA",
+      //       spreadsheetId: _IDS.TARGET_1,
       //       sheetName: "Alt_HS_Attendance_Enrollment_Count",
       //     },
       //   ],
@@ -122,7 +166,7 @@ var CONFIG = {
         range: "A2:H",
         targets: [
           {
-            spreadsheetId: "1q61g_br0jmqtAvyQhNYto1jezfzjttmsKAAG-pznXak",
+            spreadsheetId: _IDS.TARGET_2,
             sheetName: "Alt_MS_Attendance_Enrollment_Count",
           },
         ],
@@ -131,7 +175,7 @@ var CONFIG = {
       //   range: "A2:I",
       //   targets: [
       //     {
-      //       spreadsheetId: "1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA",
+      //       spreadsheetId: _IDS.TARGET_1,
       //       sheetName: "Entry_Withdrawal",
       //     },
       //   ],
@@ -140,7 +184,7 @@ var CONFIG = {
       //   range: "A2:E",
       //   targets: [
       //     {
-      //       spreadsheetId: "1q61g_br0jmqtAvyQhNYto1jezfzjttmsKAAG-pznXak",
+      //       spreadsheetId: _IDS.TARGET_2,
       //       sheetName: "Allergies",
       //     },
       //   ],
@@ -167,16 +211,17 @@ var CONFIG = {
   },
 
   /**
-   * Success dialog links for the manual push feature
+   * Success dialog links for the manual push feature.
+   * URLs are constructed from Script Properties at runtime.
    */
   SUCCESS_LINKS: [
     {
-      name: "NAMS 2025-26 Criteria Sheet",
-      url: "https://docs.google.com/spreadsheets/d/1q61g_br0jmqtAvyQhNYto1jezfzjttmsKAAG-pznXak/edit?gid=1453553637#gid=1453553637",
+      name: "Target Spreadsheet 2",
+      url: "https://docs.google.com/spreadsheets/d/" + _IDS.TARGET_2 + "/edit",
     },
     {
-      name: "NAHS 2025-26 Student Transition Notes",
-      url: "https://docs.google.com/spreadsheets/d/14-nvlNOLWebnJJOQNZPnglWx0OuE5U-_xEbXGodND6E/edit?gid=1422083122#gid=1422083122",
+      name: "Notes Spreadsheet",
+      url: "https://docs.google.com/spreadsheets/d/" + _IDS.NOTES + "/edit",
     },
   ],
 };

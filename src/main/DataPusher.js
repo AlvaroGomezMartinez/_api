@@ -1,11 +1,11 @@
 /**
- * Data Pusher for NISD API Project
+ * Data Pusher for DataLake Project
  * Handles manual data push operations from the main spreadsheet to target spreadsheets.
  * Compatible with Google Apps Script V8 runtime.
  *
- * @file Data pusher for NISD API project.
- * @author Alvaro Gomez, Academic Technology Coach
- * @version 2.0.0
+ * @file Data pusher for DataLake project.
+ * @author Alvaro Gomez
+ * @version 2.1.0
  * @since 2025-08-04
  */
 

@@ -1,11 +1,11 @@
 /**
- * Email Processor for NISD API Project
+ * Email Processor for DataLake Project
  * Handles automated data processing from Gmail attachments to Google Sheets.
  * Compatible with Google Apps Script V8 runtime.
  *
- * @file Email processor for NISD API project.
- * @author Alvaro Gomez, Academic Technology Coach
- * @version 2.0.0
+ * @file Email processor for DataLake project.
+ * @author Alvaro Gomez
+ * @version 2.1.0
  * @since 2025-08-04
  */
 

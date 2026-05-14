@@ -8,8 +8,8 @@
  * @property {string} label - Gmail label to use for filtering emails
  * @property {string} sheetName - Associated sheet name for processing
  *
- * @author Alvaro Gomez, Academic Technology Coach
- * @version 2.0.0
+ * @author Alvaro Gomez
+ * @version 2.1.0
  * @since 2025-08-04
  */
 

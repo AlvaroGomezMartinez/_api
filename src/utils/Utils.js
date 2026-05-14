@@ -1,10 +1,10 @@
 /**
- * Utility functions for the NISD API project.
+ * Utility functions for the DataLake project.
  * Contains helper functions for logging, system info, connectivity tests, and formatting.
  * Compatible with Google Apps Script V8 runtime.
  *
- * @file Utility functions for NISD API project.
- * @author Alvaro Gomez, Academic Technology Coach
+ * @file Utility functions for DataLake project.
+ * @author Alvaro Gomez
  */
 
 /**
@@ -49,7 +49,8 @@
  * safeFn(arg1, arg2);
  */
 function withOperationLogging(fn, operationName, context) {
-  return function(...args) {
+  return function() {
+    var args = Array.prototype.slice.call(arguments);
     var timer = AppLogger_startTimer(operationName);
     try {
       AppLogger_operationStart(operationName, context);

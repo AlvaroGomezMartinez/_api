@@ -1,15 +1,15 @@
 /**
  * @file Menu.js
  * @module Menu
- * @description Provides Google Sheets menu integration and user interface functions for the NISD API project.
+ * @description Provides Google Sheets menu integration and user interface functions for the DataLake project.
  *
  * @typedef {Object} OperationResult
  * @property {boolean} success - Whether the operation succeeded
  * @property {string} [sourceSheet] - Name of the source sheet
  * @property {string} [error] - Error message if operation failed
  *
- * @author Alvaro Gomez, Academic Technology Coach
- * @version 2.0.0
+ * @author Alvaro Gomez
+ * @version 2.1.0
  * @since 2025-08-04
  */
 
@@ -42,14 +42,6 @@ function onOpen() {
  *
  * @function
  * @returns {void}
- * @example
- * // Called via menu item, processes currently active configurations:
- * // ACTIVE:
- * // - Alt_HS_Attendance_Enrollment_Count → NAHS Criteria
- * // - Alt_MS_Attendance_Enrollment_Count → NAMS Criteria
- * // DISABLED FEATURES (available for re-activation):
- * // - Entry_Withdrawal → NAHS Criteria  
- * // - Allergies → NAMS Criteria
  * @since 1.0.0
  * @see {@link DataPusher_pushAllData} for the underlying implementation
  */
@@ -278,40 +270,4 @@ function showSystemTestResults() {
   }
 }
 
-/**
- * Legacy function for backward compatibility.
- * Updates the target sheet with new data, clearing old data and appending a timestamp note in cell A1.
- *
- * @deprecated Use SheetService.updateSheet() instead
- * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet - The target sheet to update.
- * @param {any[][]} data - The data to write to the target sheet. Each sub-array represents a row.
- * @throws {Error} If the target sheet is not found or if other issues occur during the update process.
- */
-function updateTargetSheet(sheet, data) {
-  try {
-    AppLogger.warn('Using deprecated updateTargetSheet function');
-    
-    if (!sheet) {
-      throw new Error("Target sheet not found!");
-    }
 
-    // Clear data from row 2 down
-    const lastRow = sheet.getLastRow();
-    if (lastRow > 1) {
-      sheet.getRange(2, 1, lastRow - 1, sheet.getMaxColumns()).clearContent();
-    }
-
-    // Insert new data starting at row 2
-    if (data.length > 0) {
-      sheet.getRange(2, 1, data.length, data[0].length).setValues(data);
-    }
-
-    // Add a note in cell A1 with the update timestamp
-    const timestampNote = DateUtils.createScriptTimestampNote();
-    sheet.getRange("A1").setNote(timestampNote);
-
-  } catch (error) {
-    const errorMessage = ErrorHandler.handle(error, 'updateTargetSheet (legacy)');
-    throw error;
-  }
-}

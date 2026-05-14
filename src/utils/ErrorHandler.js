@@ -1,12 +1,12 @@
 /**
- * Error Handler Utility for NISD API Project
- * Centralized error handling utility for the NISD API project.
+ * Error Handler Utility for DataLake Project
+ * Centralized error handling utility for the DataLake project.
  * Provides consistent error handling, logging, and retry mechanisms.
  * Compatible with Google Apps Script V8 runtime.
  *
- * @file Error handler utilities for NISD API project.
- * @author Alvaro Gomez, Academic Technology Coach
- * @version 2.0.0
+ * @file Error handler utilities for DataLake project.
+ * @author Alvaro Gomez
+ * @version 2.1.0
  * @since 2025-08-04
  */
 

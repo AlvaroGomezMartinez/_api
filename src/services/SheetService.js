@@ -1,11 +1,11 @@
 /**
- * Google Sheets Service for NISD API Project
+ * Google Sheets Service for DataLake Project
  * Provides methods for reading, writing, and managing spreadsheet data.
  * Compatible with Google Apps Script V8 runtime.
  *
- * @file Sheet service for NISD API project.
- * @author Alvaro Gomez, Academic Technology Coach
- * @version 2.0.0
+ * @file Sheet service for DataLake project.
+ * @author Alvaro Gomez
+ * @version 2.1.0
  * @since 2025-08-04
  */
 

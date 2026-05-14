@@ -1,10 +1,10 @@
 /**
- * @file Logger Utility for NISD API Project
- * @description Structured logging utility for the NISD API project.
+ * @file Logger Utility for DataLake Project
+ * @description Structured logging utility for the DataLake project.
  * Provides consistent logging with different levels and structured output.
  * Compatible with Google Apps Script V8 runtime.
- * @author Alvaro Gomez, Academic Technology Coach
- * @version 2.0.0
+ * @author Alvaro Gomez
+ * @version 2.1.0
  * @since 2025-08-04
  */
 

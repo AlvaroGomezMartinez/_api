@@ -1,11 +1,10 @@
-# Ignore Git folder
-.git/
+# Ignore everything by default
+**
 
-# Ignore clasp project config file
-.clasp.json
-
-# Ignore markdown files like README
-*.md
-
-# Ignore MacOS system files
-.DS_Store
+# Allow only pushable GAS files
+!src/*.js
+!src/appsscript.json
+!src/config/*.js
+!src/main/*.js
+!src/services/*.js
+!src/utils/*.js

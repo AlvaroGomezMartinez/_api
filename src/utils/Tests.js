@@ -1,10 +1,10 @@
 /**
- * Test suite for the NISD API project.
+ * Test suite for the DataLake project.
  * Provides comprehensive testing functions for all modules.
  * Compatible with Google Apps Script V8 runtime.
  *
- * @file Test suite for NISD API project.
- * @author Alvaro Gomez, Academic Technology Coach
+ * @file Test suite for DataLake project.
+ * @author Alvaro Gomez
  */
 
 /**

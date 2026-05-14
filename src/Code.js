@@ -1,7 +1,7 @@
 /**
  * @file Code.js
  * @module MainEntryPoints
- * @description Main entry points for automated data processing, spreadsheet management, and system operations in the NISD API Project.
+ * @description Main entry points for automated data processing, spreadsheet management, and system operations.
  *
  * @typedef {Object} ProcessingResult
  * @property {boolean} success - Whether the operation succeeded
@@ -14,47 +14,34 @@
  * @property {boolean} processed - Whether processing was successful
  * @property {string} [message] - Additional status message
  *
- * @author Alvaro Gomez, Academic Technology Coach
- * @contact alvaro.gomez@nisd.net
- * @version 2.0.0
+ * @author Alvaro Gomez
+ * @version 2.1.0
  * @since 2025-08-04
  */
 
 /**
- * @overview NISD API Project
- * 
- * This project supports a Google spreadsheet that simulates an API. The spreadsheet contains
- * multiple sheets that feed information to separate projects. The spreadsheet is designed
- * to make data gathering more time efficient.
- * 
- * ## Data Sources
- * **Manual Updates Required (Partially Active):**
- * - Entry_Withdrawal (Disabled)
- * - Allergies (Disabled)
- * (Manual features were disabled on 2025-08-12 because the campus wasn't using those reports this year)
- * 
- * **Automated Updates:**
+ * @overview DataLake Project
+ *
+ * Supports a Google Spreadsheet that acts as a data API. Multiple sheets feed
+ * data to downstream projects. Automated email processing pulls Excel attachments
+ * from scheduled Cognos report emails and updates the corresponding sheets daily.
+ *
+ * ## Automated Sheets
  * - Schedules
  * - ContactInfo
  * - Entry_Withdrawal2
  * - Alt_HS_Attendance_Enrollment_Count
  * - Alt_MS_Attendance_Enrollment_Count
- * (Updated via Cognos report subscriptions and email triggers)
- * 
- * ## Architecture
- * This script uses a modular architecture with:
- * - Proper error handling and logging
- * - Configuration management
- * - Service layer abstractions
- * - Comprehensive validation
- * 
+ *
+ * ## Disabled (available for re-activation in Config.js)
+ * - Entry_Withdrawal (manual push)
+ * - Allergies (manual push)
+ *
  * ## Automation Schedule
- * Five time-based triggers run every weekday at 5:00 AM (one for each day of the week)
- * Cognos emails the reports daily (scheduled between 3:00 - 3:05 AM).
- * Emails are automatically labeled and filtered using Gmail's labeling rules service.
- * 
- * @author Alvaro Gomez, Academic Technology Coach
- * @contact Office: 1-210-397-9408 | Cell: 1-210-363-1577
+ * Five time-based triggers run every weekday at 5:00 AM (one per weekday).
+ * Reports are emailed by the source system daily between 3:00–3:05 AM.
+ *
+ * @author Alvaro Gomez
  */
 
 /**
@@ -89,59 +76,6 @@ function updateSheetsFromEmail() {
   )();
 }
 
-// ...existing code for deprecated/legacy functions...
-// function processEmailToSheet(labelName, spreadsheetId, sheetName, rangeToClear) {
-//   try {
-//     AppLogger_warn('Using deprecated processEmailToSheet function', {
-//       labelName: labelName,
-//       spreadsheetId: spreadsheetId,
-//       sheetName: sheetName,
-//       rangeToClear: rangeToClear
-//     });
-    
-//     // Create a temporary config object
-//     var config = {
-//       label: labelName,
-//       sheetName: sheetName,
-//       rangeToClear: rangeToClear
-//     };
-    
-//     // Use the new EmailProcessor
-//     var result = EmailProcessor_processSingleConfig(config, 'processEmailToSheet_legacy');
-    
-//     Logger.log('Data inserted into sheet "' + sheetName + '" successfully!');
-//     return result;
-    
-//   } catch (error) {
-//     var errorMessage = ErrorHandler_handle(error, 'processEmailToSheet (legacy)');
-//     throw error;
-//   }
-// }
-
-/**
- * Legacy function for backward compatibility
- * Processes Excel data from a file blob (now delegates to DriveService)
- * 
- * @deprecated Use DriveService.processExcelData() instead
- * @param {Blob} fileBlob - The Excel file attachment as a Blob object
- * @returns {Array<Array<string>>} The extracted data from the Excel file, excluding the header row
- */
-// function processExcelData(fileBlob) {
-//   try {
-//     AppLogger_warn('Using deprecated processExcelData function');
-    
-//     // Use the new DriveService
-//     return DriveService_processExcelData(fileBlob, 'processExcelData_legacy');
-    
-//   } catch (error) {
-//     var errorMessage = ErrorHandler_handle(error, 'processExcelData (legacy)');
-//     throw error;
-//   }
-// }
-
-// ================================
-// NEW REFACTORED ENTRY POINTS
-// ================================
 
 /**
  * Processes emails for a specific Gmail label (for testing/debugging).

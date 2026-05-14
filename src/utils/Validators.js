@@ -1,10 +1,10 @@
 /**
- * Input validation utilities for the NISD API project.
+ * Input validation utilities for the DataLake project.
  * Provides comprehensive validation functions for various data types and formats.
  * Compatible with Google Apps Script V8 runtime.
  *
- * @file Input validation utilities for NISD API project.
- * @author Alvaro Gomez, Academic Technology Coach
+ * @file Input validation utilities for DataLake project.
+ * @author Alvaro Gomez
  */
 
 /**

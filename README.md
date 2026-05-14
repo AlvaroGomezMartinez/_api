@@ -1,183 +1,188 @@
-# _DataLake Project
+# DataLake — Google Apps Script Data Automation
 
-## Project Description
-This project supports a Google spreadsheet that simulates an API. The spreadsheet contains five sheets that feed data to separate projects. The spreadsheet is meant to automate data gathering. Manual data push features have been temporarily disabled (2025-08-12) but can be re-activated as needed. Automated email processing features remain active.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> **📋 Important**: Some features have been temporarily disabled. See [`DISABLED_FEATURES.md`](./DISABLED_FEATURES.md) for details and re-activation instructions.
+> Originally created for Northside Independent School District (NISD). Generalized and released for public use upon retirement.
 
-## Architecture Overview
+A Google Apps Script project that automates daily data gathering by processing scheduled report emails, extracting Excel attachments, and pushing data into a central Google Spreadsheet that acts as a data API for downstream projects.
 
-The codebase follows a layered architecture pattern:
+---
 
-```
-├── src/
-│   ├── config/
-│   │   └── Config.js          # Centralized configuration
-│   ├── services/
-│   │   ├── EmailService.js    # Gmail operations
-│   │   ├── DriveService.js    # Google Drive operations
-│   │   └── SheetService.js    # Spreadsheet operations
-│   ├── utils/
-│   │   ├── Logger.js          # Structured logging
-│   │   ├── ErrorHandler.js    # Error handling utilities
-│   │   ├── DateUtils.js       # Date formatting utilities
-│   │   ├── Validators.js      # Input validation
-│   │   ├── Utils.js           # General utilities
-│   │   └── Tests.js           # Test functions
-│   └── main/
-│       ├── EmailProcessor.js  # Email processing logic
-│       └── DataPusher.js      # Manual data push logic
-├── Code.js                    # Main entry points
-├── Menu.js                    # UI and menu functions
-└── Get Labels.js              # Legacy utilities (deprecated)
+## What It Does
+
+- **Automated email processing**: Monitors Gmail labels for incoming report emails, extracts Excel attachments, and updates corresponding sheets in a central spreadsheet — daily, on a schedule.
+- **Manual data push**: Copies data from source sheets in the central spreadsheet to one or more target spreadsheets via a spreadsheet menu.
+- **Status and testing**: Built-in menu items and functions to check system health, run dry runs, and verify configurations without making data changes.
+
+> **📋 Note**: Some push data features are temporarily disabled. See [`DISABLED_FEATURES.md`](./DISABLED_FEATURES.md) for re-activation instructions.
+
+---
+
+## Setup
+
+### Prerequisites
+
+- A Google account with access to Gmail, Google Drive, and Google Sheets
+- [Node.js](https://nodejs.org/) (LTS) and npm
+- [clasp](https://github.com/google/clasp) — Google's CLI for Apps Script
+
+```bash
+npm install -g @google/clasp
 ```
 
-### Key Features
+### Deploy
 
-#### 🔧 **Automated Email Processing**
-- Processes emails from specific Gmail labels
-- Extracts Excel attachments and converts them to data
-- Updates target spreadsheet sheets automatically
-- Runs on weekday triggers at 5:00 AM
+```bash
+clasp login          # Authenticate with your Google account
+clasp pull           # Pull the current project from Apps Script
+# make any edits
+clasp push           # Push changes back to Apps Script
+```
 
-#### 📊 **Manual Data Push**
-- Pushes data from source sheets to multiple target spreadsheets
-- Configurable source and target mappings
-- Batch processing with individual error handling
+### Required Script Properties
 
-#### 🛠️ **Enhanced Error Handling**
-- Comprehensive error catching and logging
-- Retry mechanisms for transient failures
-- Structured error reporting with context
+After deploying, run `setupScriptProperties()` once from the Apps Script editor — or set the following properties manually via **Project Settings → Script Properties**:
 
-#### 📝 **Structured Logging**
-- Multiple log levels (INFO, WARN, ERROR, DEBUG)
-- Performance monitoring with timers
-- Operation tracking and batch summaries
+| Property | Description |
+|---|---|
+| `SPREADSHEET_MAIN` | ID of the main/central spreadsheet |
+| `SPREADSHEET_TARGET_1` | ID of the first target spreadsheet |
+| `SPREADSHEET_TARGET_2` | ID of the second target spreadsheet |
+| `SPREADSHEET_NOTES` | ID of the notes/handoff spreadsheet (optional) |
 
-#### ✅ **Validation & Testing**
-- Input validation for all operations
-- System connectivity tests
-- Dry run capabilities for safe testing
+To find a spreadsheet ID, open the spreadsheet in your browser — it's the long string in the URL between `/d/` and `/edit`.
 
-### Main Functions
+### Triggers
 
-#### Email Processing
+The main automation runs via time-based triggers. Set up five triggers manually in the Apps Script editor (one per weekday):
+
+- **Function**: `updateSheetsFromEmail`
+- **Event source**: Time-driven → Week timer
+- **Day**: Monday / Tuesday / Wednesday / Thursday / Friday
+- **Time**: 5:00 AM – 6:00 AM (adjust to your timezone)
+
+---
+
+## Configuration
+
+All settings live in `src/config/Config.js`. The three sections you'll edit:
+
+**`SPREADSHEETS`** — loaded from Script Properties at runtime (set via `setupScriptProperties()`).
+
+**`EMAIL_CONFIGS`** — one entry per Gmail label to monitor:
 ```javascript
-updateSheetsFromEmail()          // Main automated function (called by triggers)
-processSpecificLabel(labelName) // Process a specific Gmail label
-getEmailProcessingStatus()       // Get status of email configurations
-runEmailProcessingDryRun()       // Validate configurations without changes
+{
+  label: "Your/Gmail/Label/Path",
+  sheetName: "TargetSheetName",
+  rangeToClear: "A2:O"
+}
 ```
 
-#### Data Push Operations
+**`PUSH_DATA_CONFIGS.sourceSheets`** — one entry per sheet to push to a target spreadsheet:
 ```javascript
-pushDataToSheets()              // Manual data push (called from menu)
-getPushDataStatus()             // Get status of push configurations
+SheetName: {
+  range: "A2:H",
+  targets: [{
+    spreadsheetId: _IDS.TARGET_1,
+    sheetName: "TargetSheetName"
+  }]
+}
 ```
 
-#### System Management
-```javascript
-runSystemTests()               // Comprehensive system tests
-getConfigurationSummary()      // Get current configuration summary
+---
+
+## Architecture
+
+```
+src/
+├── config/
+│   └── Config.js          # ⭐ All settings — edit here first
+├── main/
+│   ├── EmailProcessor.js  # Orchestrates email → sheet pipeline
+│   └── DataPusher.js      # Orchestrates sheet → target push
+├── services/
+│   ├── EmailService.js    # Gmail label and attachment operations
+│   ├── DriveService.js    # Drive file creation and Excel conversion
+│   └── SheetService.js    # Sheet read, clear, and write operations
+└── utils/
+    ├── Logger.js          # Structured logging (ERROR/WARN/INFO/DEBUG)
+    ├── ErrorHandler.js    # Retry logic and error handling
+    ├── DateUtils.js       # Date formatting helpers
+    ├── Validators.js      # Input validation
+    ├── Utils.js           # General utilities and system tests
+    └── Tests.js           # Test suite
+Code.js                    # Public entry point functions
+Menu.js                    # Spreadsheet UI menu
+appsscript.json            # GAS manifest
 ```
 
-### Configuration
+---
 
-All project settings are centralized in `src/config/Config.js`:
+## Usage
 
-- **Spreadsheet IDs**: Main and target spreadsheet identifiers
-- **Email Configurations**: Gmail labels and corresponding sheets
-- **Push Data Configurations**: Source to target mappings
-- **System Settings**: Timezone, retry policies, etc.
+### Automated (via triggers)
 
-### Spreadsheet Integration
+Triggers call `updateSheetsFromEmail()` on the configured schedule. No manual action needed once triggers are set up.
 
-The project integrates with several Google Spreadsheets:
+### Manual operations (from the spreadsheet menu)
 
-1. **Main Spreadsheet** (`1uCQ_Z4QLbHq89tutZ4Wen0TREwS8qEx2j7MmzUgXOaY`)
-   - Central data repository
-   - Contains both automated and manual sheets
+Open the spreadsheet → **🚩 Push Data** menu:
 
-2. **NAHS Criteria Sheet** (`1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA`)
-   - Target for attendance and entry/withdrawal data
+| Menu item | What it does |
+|---|---|
+| Push Data to Sheets | Copies data from source sheets to all configured target spreadsheets |
+| Check Push Status | Shows current row counts and target accessibility |
+| Test Email Processing | Shows label status and latest email dates |
+| Run System Tests | Runs full connectivity and configuration checks |
 
-3. **NAMS Criteria Sheet** (`1O3DSgTbhphNVDXLmlGkEiyVejsL_l4fPsf2cJJpQpTo`)
-   - Target for allergies data
+### Developer functions (from the Apps Script editor)
 
-### Automated Sheets (Email Processing)
-- **Schedules**: Updated daily from the scheduled Cognos report called, "My My SCHD - CY Students List (2)"
-- **ContactInfo**: Updated daily from the scheduled Cognos report called, "My Student CY List - Student Email/Contact Info - Next Year Option (3)"  
-- **Entry_Withdrawal2**: Updated daily from the scheduled Cognos report called, "My Student CY List - Entry/Withdrawal in DateRange (2)"
-- **Alt_HS_Attendance_Enrollment_Count**: Updated daily from the scheduled Cognos report called, "My Alt HS Attendance/Enrollment Count (3)"
-- **Alt_MS_Attendance_Enrollment_Count**: Updated daily from the scheduled Cognos report called, "My Alt MS Attendance/Enrollment Count"
-
-**Temporarily Disabled (Available for Re-activation):**
-- **Entry_Withdrawal**: Manually maintained entry/withdrawal data
-- **Allergies**: Manually maintained allergy information
-
-> **Note**: Most manual features were disabled on 2025-08-12 per user request but remain available in the codebase (commented out) for potential re-activation later in the year.
-
-### Usage
-
-#### For End Users
-1. **Automated Processing**: Runs automatically via GAS triggers
-2. **Manual Data Push**: Use the "🚩 Push Data" menu in the spreadsheet
-3. **Status Checking**: Use menu items to check system status
-
-#### For Developers
 ```javascript
-// Run comprehensive tests
-runSystemTests()
+// Process all configured Gmail labels
+updateSheetsFromEmail()
 
-// Check specific component status
+// Process a single label
+processSpecificLabel("Your/Gmail/Label/Path")
+
+// Validate configs without making changes
+runEmailProcessingDryRun()
+
+// Check status
 getEmailProcessingStatus()
 getPushDataStatus()
 
-// Process specific operations
-processSpecificLabel("specific/gmail/label")
+// Run all system tests
+runSystemTests()
 ```
 
-### Error Handling & Monitoring
+---
 
-The refactored system provides comprehensive error handling:
+## Error Handling
 
-- **Graceful Failures**: Individual operation failures don't stop batch processing
-- **Detailed Logging**: All operations are logged with context and timing
-- **Retry Logic**: Automatic retries for transient failures
-- **Status Reporting**: Real-time status of all configurations
+- **Retry logic**: Failed operations retry up to 5 times with a 1-second delay (configurable in `RETRY_CONFIG`).
+- **Batch resilience**: A single sheet failure does not abort the full batch — partial results are returned.
+- **Logging**: All operations log to Stackdriver (Google Cloud Logging) via `"exceptionLogging": "STACKDRIVER"` in `appsscript.json`. View logs at [console.cloud.google.com](https://console.cloud.google.com) → Logs Explorer.
+- **Log levels**: ERROR, WARN, INFO, DEBUG (set `logLevel` in `CONFIG.SETTINGS`).
 
-### Testing
+---
 
-The project includes a comprehensive test suite:
+## Testing
 
 ```javascript
-runAllTests()        // Run all available tests
-showTestResults()    // Display test results in UI
+runSystemTests()    // Connectivity, config validation, dry run — all in one
+runAllTests()       // Full unit + integration test suite
 ```
 
-Tests cover:
-- Configuration validation
-- Service connectivity
-- Utility function validation
-- System integration tests
+Tests cover configuration validation, Gmail and spreadsheet connectivity, utility functions, and a dry run of the email processing pipeline.
 
-### Migration Notes
+---
 
-**Legacy functions are maintained for backward compatibility** but marked as deprecated:
-- `processEmailToSheet()` → Use `EmailProcessor.processSingleConfig()`
-- `processExcelData()` → Use `DriveService.processExcelData()`
-- `updateTargetSheet()` → Use `SheetService.updateSheet()`
+## Attribution
 
-### Benefits of Refactoring
+Originally built by [Alvaro Gomez](mailto:alvaro.gomez2011@gmail.com) for Northside Independent School District (NISD). Generalized for public use upon retirement.
 
-1. **Maintainability**: Modular structure makes updates easier
-2. **Reliability**: Better error handling and retry mechanisms
-3. **Debuggability**: Comprehensive logging and status reporting
-4. **Scalability**: Easy to add new features and configurations
-5. **Testability**: Built-in testing and validation capabilities
+---
 
-### Author
-[Alvaro Gomez](mailto:alvaro.gomez@nisd.net), Academic Technology Coach<br>
-Office: 1-210-397-9408<br>
-Mobile: 1-210-363-1577
+## License
+
+[MIT](LICENSE)

@@ -1,57 +1,26 @@
-# Disabled Features Documentation
+# Disabled Features
 
-## Overview
-The following features were temporarily disabled on **2025-08-12** per user request. They remain available in the codebase (commented out) and can be easily re-activated if needed later in the year.
+Some data push features are currently commented out in `src/config/Config.js`. They are fully implemented and can be re-activated at any time.
 
-**UPDATE (2025-08-12)**: Alt_MS_Attendance_Enrollment_Count has been re-enabled and is now active.
-**UPDATE (2025-08-12)**: Alt_HS_Attendance_Enrollment_Count has been re-enabled and is now active.
+## Currently Disabled
 
-## Currently Active Features
+| Feature | Source Sheet | Target Sheet | Range |
+|---|---|---|---|
+| Entry_Withdrawal push | `Entry_Withdrawal` | Target spreadsheet 1 | A2:I |
+| Allergies push | `Allergies` | Target spreadsheet 2 | A2:E |
 
-### Alt_HS_Attendance_Enrollment_Count (Re-enabled 2025-08-12)
-- **Email Processing**: Automated updates from Cognos reports
-- **Data Push**: Manual push to NAHS Criteria Sheet
-- **Data Range**: A2:H
-- **Purpose**: High school attendance data
+## How to Re-enable
 
-### Alt_MS_Attendance_Enrollment_Count (Re-enabled 2025-08-12)
-- **Email Processing**: Automated updates from Cognos reports
-- **Data Push**: Manual push to NAMS Criteria Sheet
-- **Data Range**: A2:H
-- **Purpose**: Middle school attendance data
+### Step 1 — Uncomment in `src/config/Config.js`
 
-## Currently Disabled Features
+In `PUSH_DATA_CONFIGS.sourceSheets`, uncomment the relevant block(s):
 
-### 1. Allergies Data Push
-- **Source**: `Allergies` sheet in main spreadsheet
-- **Target**: NAMS Criteria Sheet (`Allergies` sheet)
-- **Data Range**: A2:E
-- **Purpose**: Manually maintained allergy information
-
-### 2. Entry_Withdrawal Data Push  
-- **Source**: `Entry_Withdrawal` sheet in main spreadsheet
-- **Target**: NAHS Criteria Sheet (`Entry_Withdrawal` sheet)
-- **Data Range**: A2:I
-- **Purpose**: Manually maintained entry/withdrawal data
-
-## How to Re-enable Features
-
-### Step 1: Update Configuration Files
-
-**In `src/config/Config.js`:**
-
-1. **For Email Processing** (uncomment in `EMAIL_CONFIGS` array):
-```javascript
-// No additional email configs needed - only Entry_Withdrawal lacks email processing
-```
-
-2. **For Data Push** (uncomment in `PUSH_DATA_CONFIGS.sourceSheets`):
 ```javascript
 Entry_Withdrawal: {
   range: "A2:I",
   targets: [
     {
-      spreadsheetId: "1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA",
+      spreadsheetId: _IDS.TARGET_1,
       sheetName: "Entry_Withdrawal",
     },
   ],
@@ -60,49 +29,41 @@ Allergies: {
   range: "A2:E",
   targets: [
     {
-      spreadsheetId: "1q61g_br0jmqtAvyQhNYto1jezfzjttmsKAAG-pznXak",
+      spreadsheetId: _IDS.TARGET_2,
       sheetName: "Allergies",
     },
   ],
 },
 ```
 
-### Step 2: Update Documentation
+Also uncomment the corresponding entries in the `RANGES` constant at the bottom of the file:
 
-**In `README.md`:**
-- Move features from "Temporarily Disabled" back to "Currently Active" section
-- Update the feature descriptions as needed
+```javascript
+ENTRY_WITHDRAWAL_MANUAL: "A2:I",
+ALLERGIES: "A2:E",
+```
 
-**In `Code.js`:**
-- Update the overview section to reflect active manual data sources
-- Remove "(Currently Disabled)" notation
+### Step 2 — Verify target spreadsheets are accessible
 
-**In `Menu.js`:**
-- Update the JSDoc examples to show the active feature mappings
+Confirm the Script Properties `SPREADSHEET_TARGET_1` and `SPREADSHEET_TARGET_2` point to spreadsheets that contain the target sheets (`Entry_Withdrawal` and `Allergies` respectively).
 
-### Step 3: Test Re-enabled Features
+### Step 3 — Deploy and test
 
-1. Run system tests: `runSystemTests()`
-2. Check push data status: `getPushDataStatus()`
-3. Test individual features:
-   - For data push: Use the "🚩 Push Data" menu
-   - For email processing: Monitor automated runs or test with `processSpecificLabel()`
+```bash
+clasp push
+```
 
-### Step 4: Verify Target Spreadsheets
+Then from the GAS editor:
 
-Ensure the target spreadsheets are still accessible:
-- **NAHS Criteria Sheet**: `1gaGyH312ad85wpyfH6dGbyNiS4NddqH6NvzTG6RPGPA`
-- **NAMS Criteria Sheet**: `1q61g_br0jmqtAvyQhNYto1jezfzjttmsKAAG-pznXak`
+```javascript
+runSystemTests()      // Verify overall health
+getPushDataStatus()   // Confirm new sheets appear as configured
+```
 
-## Implementation Notes
+Use the **🚩 Push Data** menu in the spreadsheet to do a live test push.
 
-- All configurations remain intact in the codebase, just commented out
-- No data or functionality has been permanently removed
-- The system will gracefully handle the absence of these configurations
-- Re-enabling should be straightforward and require minimal testing
+## Notes
 
-## Contact
-
-For questions about re-enabling these features:
-- **Author**: Alvaro Gomez, Academic Technology Coach  
-- **Email**: alvaro.gomez@nisd.net
+- No code was deleted — everything is commented out and ready to restore.
+- The automated email processing pipeline is unaffected by these disabled features.
+- If the target sheets don't exist in the target spreadsheets, create them before re-enabling.

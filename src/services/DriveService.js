@@ -1,10 +1,10 @@
 /**
- * Google Drive service for handling file operations in the NISD API project.
+ * Google Drive service for handling file operations in the DataLake project.
  * Provides methods for processing Excel files and managing temporary files.
  * Compatible with Google Apps Script V8 runtime.
  *
- * @file Drive service for NISD API project.
- * @author Alvaro Gomez, Academic Technology Coach
+ * @file Drive service for DataLake project.
+ * @author Alvaro Gomez
  */
 
 /**
@@ -91,7 +91,7 @@ function DriveService__createTempFile(fileBlob) {
     
     // Add metadata to identify as temporary
     var timestamp = DateUtils_getCurrentTimestamp();
-    file.setDescription('Temporary file created by NISD API script at ' + timestamp);
+    file.setDescription('Temporary file created by DataLake script at ' + timestamp);
     
     return file;
   } catch (error) {

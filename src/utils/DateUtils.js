@@ -1,10 +1,10 @@
 /**
- * Date and time utilities for the NISD API project.
+ * Date and time utilities for the DataLake project.
  * Provides consistent date formatting, parsing, and timezone handling.
  * Compatible with Google Apps Script V8 runtime.
  *
- * @file Date and time utilities for NISD API project.
- * @author Alvaro Gomez, Academic Technology Coach
+ * @file Date and time utilities for DataLake project.
+ * @author Alvaro Gomez
  */
 
 /**
