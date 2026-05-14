@@ -28,4 +28,4 @@ script-properties*.json
 *.ipynb
 
 # Internal district handoff document
-README_Template.md
+README_for_shared-drive.md
